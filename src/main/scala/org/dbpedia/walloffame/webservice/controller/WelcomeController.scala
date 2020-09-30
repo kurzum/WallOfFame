@@ -1,4 +1,4 @@
-package org.dbpedia.walloffame.controller
+package org.dbpedia.walloffame.webservice.controller
 
 import java.util.Date
 

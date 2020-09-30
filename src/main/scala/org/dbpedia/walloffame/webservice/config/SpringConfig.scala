@@ -1,4 +1,4 @@
-package org.dbpedia.walloffame.config
+package org.dbpedia.walloffame.webservice.config
 
 import org.springframework.context.annotation.{Bean, ComponentScan, Configuration}
 import org.springframework.web.servlet.config.annotation.{EnableWebMvc, ResourceHandlerRegistry, WebMvcConfigurer}

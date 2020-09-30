@@ -1,5 +1,5 @@
 
-import org.dbpedia.walloffame.config.SpringConfig
+import org.dbpedia.walloffame.webservice.config.SpringConfig
 import org.junit.jupiter.api.{BeforeEach, Test}
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig

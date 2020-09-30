@@ -1,6 +1,6 @@
-package org.dbpedia.walloffame
+package org.dbpedia.walloffame.webservice
 
-import org.dbpedia.walloffame.config.SpringConfig
+import org.dbpedia.walloffame.webservice.config.SpringConfig
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 class WebInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
