@@ -1,4 +1,9 @@
-*.log
-target
+.cache
+.classpath
 .idea
-crawl/tmp
+out
+.project
+.settings
+.settings/*
+target
+*.iml

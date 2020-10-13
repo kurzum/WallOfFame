@@ -1,0 +1,17 @@
+<%@page contentType="text/html;charset=utf-8"%>
+<%@include file="taglibs.jspf"%>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<tags:head title="DBpedia WebId Validator">
+  <meta name="description" content="A webapp built with Scala, Spring, and Maven that can validate your WebId and crawl and uniform all WebIds registered on the DBpedia Databus">
+  <meta name="keywords" content="DBpedia, WebId, Validator">
+</tags:head>
+<body id="home">
+  <p>
+    <a href="<c:url value="/webid/validateWebId.html"/>">Validate Your WebId</a>
+  </p>
+  <p>
+    <a href="<c:url value="/webid/webids.html"/>">Get all WebIds registered on the DBpedia Databus (uniformed)</a>
+  </p>
+</body>
+</html>
