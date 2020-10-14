@@ -6,8 +6,8 @@ object WebIdCrawler {
 
   def crawl():File ={
     import sys.process._
-    val resultpath = "./crawl/crawl.sh" !!
+    val result:String = "./crawl/crawl.sh" !!
 
-    File(resultpath)
+    File(result.trim)
   }
 }

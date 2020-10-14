@@ -9,7 +9,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <scala.version>2.11.9</scala.version>
+        <scala.version>2.11.12</scala.version>
         <org.springframework.version>4.0.6.RELEASE</org.springframework.version>
         <slf4j.version>1.7.30</slf4j.version>
     </properties>
@@ -30,11 +30,14 @@
             <scope>compile</scope>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.github.pathikrit/better-files -->
         <dependency>
             <groupId>com.github.pathikrit</groupId>
             <artifactId>better-files_2.11</artifactId>
             <version>3.9.1</version>
         </dependency>
+
+
 
         <dependency>
             <groupId>xerces</groupId>
@@ -207,6 +210,10 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <args>
+                        <arg>-target:jvm-1.8</arg>
+                    </args>
+<!--                    <addScalacArgs>-target:jvm-1.8</addScalacArgs>-->
                     <scalaVersion>${scala.version}</scalaVersion>
                 </configuration>
             </plugin>

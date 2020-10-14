@@ -4,10 +4,10 @@ import java.io.File
 
 import javax.validation.Valid
 import javax.validation.constraints.NotNull
+import org.apache.jena.riot.RiotException
 import org.dbpedia.walloffame.spring.data.WebId
 import org.dbpedia.walloffame.validation.WebIdValidator
 import org.hibernate.validator.constraints.NotEmpty
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.RequestMethod._
@@ -26,8 +26,7 @@ class WebIdController {
   def showNewCustomerForm() = new ModelAndView("webid/validate", "validation", new WebIdPageData)
 
   @RequestMapping(value = Array("webid/validateWebId"), method = Array(POST))
-  def sendWebIdToValidate(
-                           @Valid @ModelAttribute("validation") validation: WebIdPageData, bindingResult: BindingResult) : ModelAndView= {
+  def sendWebIdToValidate(@Valid @ModelAttribute("validation") validation: WebIdPageData, bindingResult: BindingResult) : ModelAndView= {
     if (bindingResult.hasErrors) {
       new ModelAndView("webid/validate", "validation", new WebIdPageData)
     } else {
@@ -46,9 +45,14 @@ class WebIdController {
 //        bindingResult.rejectValue("webid", "error.parseError", "Your WebId not valid.")
 //      }
 
-      var result = WebIdValidator.validateWithShacl(fileToValidate)
-      if(result=="") result= "Your WebId is valid."
-//      else result = result.replaceAll("\n", "<br/>")
+      var result = ""
+
+      try{
+        result = WebIdValidator.validateWithShacl(fileToValidate)
+        if(result=="") result= "Your WebId is valid."
+      } catch {
+        case riot:RiotException => result = riot.toString
+      }
 
       fileToValidate.delete()
 

@@ -50,7 +50,7 @@ object QueryHandler {
 
     try {
       val sizeBefore = constructedModel.size()
-      val construct = qexec.execConstruct(constructedModel)
+      qexec.execConstruct(constructedModel)
       if (sizeBefore < constructedModel.size()) true
       else false
     } finally qexec.close()

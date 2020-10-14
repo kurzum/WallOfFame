@@ -12,19 +12,17 @@ object ConstructQueries {
        |  ?webid a foaf:PersonalProfileDocument .
        |  ?webid foaf:maker ?maker .
        |  ?maker foaf:name ?makerName .
-       |  ?maker <http://www.w3.org/ns/auth/cert#key> ?key .
-       |  ?key <http://www.w3.org/ns/auth/cert#modulus> ?keyvalue .
        |  }
        |WHERE {
        |  ?webid a foaf:PersonalProfileDocument .
        |  ?webid foaf:maker ?maker .
        |  ?maker foaf:name ?makerName .
-       |  ?maker <http://www.w3.org/ns/auth/cert#key> ?key .
-       |  ?key <http://www.w3.org/ns/auth/cert#modulus> ?keyvalue .
        |  }
        |""".stripMargin
 
   }
+
+
   def constructWebIdURL(): String = {
     """
       |PREFIX foaf: <http://xmlns.com/foaf/0.1/>

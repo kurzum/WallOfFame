@@ -2,7 +2,7 @@ package org.dbpedia.walloffame.shaclTest
 
 import java.io.{ByteArrayOutputStream, File}
 
-import org.apache.jena.riot.{Lang, RDFDataMgr}
+import org.apache.jena.riot.{Lang, RDFDataMgr, RiotException}
 import org.apache.jena.shacl.{ShaclValidator, Shapes}
 import org.apache.jena.shacl.lib.ShLib
 import org.dbpedia.walloffame.validation.WebIdValidator
@@ -99,5 +99,17 @@ class ShaclTest {
                 |               ]
                 |] .
                 |""".stripMargin
+  }
+
+  @Test
+  def wrongFile:Unit={
+    try {
+      val wrongFile = new File("asd.ttl")
+
+      WebIdValidator.validateWithShacl(wrongFile)
+    } catch {
+      case x:RiotException =>
+    }
+
   }
 }

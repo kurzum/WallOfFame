@@ -3,7 +3,7 @@ parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
 
 cd "$parent_path"
 
-FOLDER=./tmp
+FOLDER=$parent_path/tmp
 rm -r -f $FOLDER
 mkdir $FOLDER
 mkdir $FOLDER/webids

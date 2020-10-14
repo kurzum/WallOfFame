@@ -7,3 +7,5 @@ out
 .settings/*
 target
 *.iml
+crawl/tmp
+*logback.xml
