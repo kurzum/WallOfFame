@@ -102,14 +102,20 @@ class ShaclTest {
   }
 
   @Test
-  def wrongFile:Unit={
-    try {
-      val wrongFile = new File("asd.ttl")
+  def correctFileShouldPass:Unit= {
 
-      WebIdValidator.validateWithShacl(wrongFile)
-    } catch {
-      case x:RiotException =>
-    }
-
+    val webIdFile = new File("./src/test/resources/correctWebId.ttl")
+    val shapeFile = new File("./src/test/resources/shape.ttl")
+    println(WebIdValidator.validate(webIdFile,shapeFile))
   }
+
+  @Test
+  def wrongFileShouldNotPass:Unit= {
+
+    val webIdFile = new File("./src/test/resources/wrongWebId.ttl")
+    val shapeFile = new File("./src/test/resources/shape.ttl")
+    println(WebIdValidator.validate(webIdFile,shapeFile))
+  }
+
 }
+

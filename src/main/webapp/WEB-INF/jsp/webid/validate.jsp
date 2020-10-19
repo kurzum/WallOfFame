@@ -9,7 +9,7 @@
     <h1>WebId Validator</h1>
 
     <form:form commandName="validation">
-        <textarea id="webid" name="webid" rows="30" cols="70">Paste your Webid here</textarea>
+        <textarea id="webid" name="webid" rows="30" cols="70">Paste your WebId in here.</textarea>
         <form:errors path="webid" cssStyle="color:red"/>
         <br/>
         <input type="submit" value="Validate" />

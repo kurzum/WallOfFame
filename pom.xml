@@ -183,8 +183,6 @@
             <artifactId>jena-shacl</artifactId>
             <version>3.13.0</version>
         </dependency>
-
-
     </dependencies>
 
     <build>

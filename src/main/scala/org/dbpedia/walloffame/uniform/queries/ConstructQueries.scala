@@ -7,16 +7,32 @@ object ConstructQueries {
   def constructWebId():String ={
     s"""
        |PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+       |PREFIX cert: <http://www.w3.org/ns/auth/cert#>
+       |PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
        |
        |CONSTRUCT {
        |  ?webid a foaf:PersonalProfileDocument .
        |  ?webid foaf:maker ?maker .
+       |  ?webid foaf:primaryTopic ?primaryTopic .
+       |  ?maker a foaf:Person .
        |  ?maker foaf:name ?makerName .
+       |  ?maker cert:key ?key .
+       |  ?key a cert:RSAPublicKey .
+       |  ?key rdf:label ?label .
+       |  ?key cert:modulus ?modulus.
+       |  ?key cert:exponent ?exponent .
        |  }
        |WHERE {
        |  ?webid a foaf:PersonalProfileDocument .
        |  ?webid foaf:maker ?maker .
+       |  ?webid foaf:primaryTopic ?primaryTopic .
+       |  ?maker a foaf:Person .
        |  ?maker foaf:name ?makerName .
+       |  ?maker cert:key ?key .
+       |  ?key a cert:RSAPublicKey .
+       |  ?key rdf:label ?label .
+       |  ?key cert:modulus ?modulus.
+       |  ?key cert:exponent ?exponent .
        |  }
        |""".stripMargin
 

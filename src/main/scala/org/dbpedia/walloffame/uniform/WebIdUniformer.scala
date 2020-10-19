@@ -6,18 +6,20 @@ import org.apache.jena.riot.RDFDataMgr
 import org.dbpedia.walloffame.crawling.WebIdCrawler
 import org.dbpedia.walloffame.uniform.queries.{ConstructQueries, SelectQueries}
 import org.dbpedia.walloffame.validation.WebIdValidator
-import org.slf4j.LoggerFactory
+import org.slf4j.{Logger, LoggerFactory}
 
 object WebIdUniformer {
 
-  val logger = LoggerFactory.getLogger("validator")
-  val constructModel = ModelFactory.createDefaultModel()
+  val logger:Logger = LoggerFactory.getLogger("validator")
 
   def uniformWebIds(dir:File):Model = {
 
+    val constructModel = ModelFactory.createDefaultModel()
+
     if (dir.exists && dir.isDirectory) {
       dir.listRecursively().foreach(file => {
-        if(WebIdValidator.validateWithShacl(file.toJava).isEmpty) uniform(file)
+        println(file.pathAsString)
+        if(WebIdValidator.validateWithShacl(file.toJava).isEmpty) uniform(file, constructModel)
       })
     }
 
@@ -28,7 +30,7 @@ object WebIdUniformer {
   }
 
 
-  def uniform(webidFile: File): Boolean = {
+  def uniform(webidFile: File, constructModel:Model): Boolean = {
 
     val model = RDFDataMgr.loadModel(webidFile.pathAsString)
 
@@ -40,7 +42,7 @@ object WebIdUniformer {
       )
     }
 
-    if (!construct(ConstructQueries.constructWebIdURL())) {
+    if (!construct(ConstructQueries.constructWebId())) {
       logger.error(s"mandatory item(s) not found for ${webidFile.name}.")
       return false
     }
