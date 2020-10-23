@@ -31,7 +31,7 @@ class ShaclTest {
 
   @Test
   def shouldSuccess {
-    val webIdFile = new File("./src/test/resources/webid1.ttl")
+    val webIdFile = new File("./src/test/resources/correctWebId.ttl")
     println(WebIdValidator.validateWithShacl(webIdFile))
 
 

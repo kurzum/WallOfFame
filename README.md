@@ -12,3 +12,10 @@ The webapp can be run inside Jetty using the Maven plugin:
 Crawl and uniform all registered WebIds with:
     
     curl localhost:9090/webids.html > webids.ttl
+
+    
+TODO:
+
+./push/webids/pom.xml
+->  <databus.absoluteDCATDownloadUrlPath>
+->  <databus.pkcs12File>
