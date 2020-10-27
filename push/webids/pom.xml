@@ -10,23 +10,20 @@
     <groupId>webids</groupId>
     <artifactId>common-metadata</artifactId>
     <packaging>pom</packaging>
-    <version>20-10-23</version>
+    <version>20-10-27</version>
 
     <modules>
         <module>uniformedWebids</module>
     </modules>
 
     <properties>
-        <databus.downloadUrlPath>
-            http://downloads.dbpedia.org/repo/${project.groupId}/${project.artifactId}/${project.version}/
-        </databus.downloadUrlPath>
-        <databus.absoluteDCATDownloadUrlPath>
-            http://quatsch.sosse/32ru0322jfj9fowejfp99/
-        </databus.absoluteDCATDownloadUrlPath>
         <databus.packageDirectory>
             ${session.executionRootDirectory}/target/databus/repo/${project.groupId}/${project.artifactId}
         </databus.packageDirectory>
-        <databus.publisher>https://eisenbahnplatte.github.io/webid.ttl</databus.publisher>
+        <databus.downloadUrlPath>
+            http://downloads.dbpedia.org/repo/${project.groupId}/${project.artifactId}/${project.version}/
+        </databus.downloadUrlPath>
+        <databus.publisher>https://eisenbahnplatte.github.io/webid.ttl#this</databus.publisher>
         <databus.pkcs12File>${user.home}/.m2/certificate_generic.pfx</databus.pkcs12File>
         <databus.license>http://purl.oclc.org/NET/rdflicense/cc-by-sa3.0</databus.license>
         <databus.documentation>crawled and uniformed graph of all databus-registered webids</databus.documentation>
@@ -52,3 +49,6 @@
 
 
 </project>
+
+
+

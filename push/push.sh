@@ -1,18 +1,20 @@
 #!/bin/bash
 
-
+cd "$( dirname "${BASH_SOURCE[0]}" )"
 cd ./webids
-GROUPDIR=$(pwd)
-VERSIONDIR=$(pwd)/uniformedWebids/$DATE
+
+
 
 #prepare directories for calculated files
 DATE=$(date +%y-%m-%d)
-mvn versions:set -DnewVersion=$DATE
+GROUPDIR=$(pwd)
+VERSIONDIR=$(pwd)/uniformedWebids/$DATE
 mkdir $VERSIONDIR
+mvn versions:set -DnewVersion=$DATE
 
 #run crawl and uniform process
+cd "$( dirname "${BASH_SOURCE[0]}" )/../"
 set -e
-cd "$( dirname "${BASH_SOURCE[0]}" )/../../"
 mvn scala:run -e -Dlauncher="walloffame" -DaddArgs="$VERSIONDIR/uniformedWebids_webids.ttl"
 
 #push data to DBpedia Databus
