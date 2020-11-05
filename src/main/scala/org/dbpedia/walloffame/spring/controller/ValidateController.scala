@@ -2,11 +2,13 @@ package org.dbpedia.walloffame.spring.controller
 
 import java.io.File
 
+import com.sun.xml.internal.bind.v2.TODO
 import javax.validation.Valid
 import javax.validation.constraints.NotNull
 import org.apache.jena.riot.RiotException
 import org.dbpedia.walloffame.spring.data.WebId
 import org.dbpedia.walloffame.validation.WebIdValidator
+import org.dbpedia.walloffame.virtuoso.VirtuosoHandler
 import org.hibernate.validator.constraints.NotEmpty
 import org.springframework.stereotype.Controller
 import org.springframework.validation.BindingResult
@@ -49,7 +51,12 @@ class ValidateController {
 
       try{
         result = WebIdValidator.validateWithShacl(fileToValidate)
-        if(result=="") result= "Your WebId is valid."
+        if(result=="") {
+          result= "Your WebId is valid."
+
+          //TODO uncomment next line to insert all valid results into virtuoso db
+//          VirtuosoHandler.insertFile(fileToValidate)
+        }
       } catch {
         case riot:RiotException => result = riot.toString
       }
