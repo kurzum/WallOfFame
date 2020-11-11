@@ -34,6 +34,10 @@ tr {
     background: #E6E5FE;
 }
 
+.item {
+    width: 120px;
+}
+
 .item h1 {
     font-size:      120%;
     margin:         1em 0;
