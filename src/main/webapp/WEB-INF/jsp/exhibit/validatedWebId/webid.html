@@ -44,6 +44,41 @@
                         <div data-ex-role="facet" data-ex-expression=".name" data-ex-facet-label="Name" data-ex-height="15em"></div>
                         <div data-ex-role="facet" data-ex-expression=".keyname" data-ex-facet-label="Key Name" data-ex-height="20em"></div>
                     </td>
+
+                    <td>
+                        <div data-ex-role="viewPanel">
+                            <div data-ex-role="lens" class="item" style="display: none;">
+                                <table style="border-spacing:5">
+                                    <tr>
+                                        <td style="position: relative"><div class="itemThumbnail-blocker"></div><img data-ex-src-content=".webid" /></td>
+                                        <td>
+                                            <h1><span data-ex-content=".name" ></span></h1>
+                                            <h2><span data-ex-content=".maker"></span></h2>
+                                            <p data-ex-content=".keyname">Public Key</p>
+                                            <p data-ex-content=".keyalue"></p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div data-ex-role="view"
+                                 data-ex-view-class="Thumbnail"
+                                 data-ex-show-all="true"
+                                 data-ex-paginate="true"
+                                 data-ex-possible-orders=".name, .maker, .keyname, .keyvalue">
+
+                                <table data-ex-role="lens" class="itemThumbnail" style="display: none;">
+                                    <tr>
+                                        <td style="vertial-align:bottom" class="itemThumbnail-thumbnailContainer">
+                                            <div style="position: relative"><div class="itemThumbnail-blocker"></div><img data-ex-src-content=".thumbnail" /></div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="itemThumbnail-caption"><span data-ex-content="value"></span></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </td>
                     <td style="width:15%">
                         <div data-ex-role="facet" data-ex-expression=".webid" data-ex-facet-label="WebId" data-ex-height="15em"></div>
                         <div data-ex-role="facet" data-ex-expression=".maker" data-ex-facet-label="Maker" data-ex-height="20em"></div>
