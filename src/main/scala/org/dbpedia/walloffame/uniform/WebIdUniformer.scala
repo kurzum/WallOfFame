@@ -19,7 +19,7 @@ object WebIdUniformer {
     if (dir.exists && dir.isDirectory) {
       dir.listRecursively().foreach(file => {
         println(file.pathAsString)
-        if(WebIdValidator.validateWithShacl(file.toJava).isEmpty) uniform(file, constructModel)
+        if(WebIdValidator.validateWithShacl(file).isEmpty) uniform(file, constructModel)
       })
     }
 
@@ -34,7 +34,7 @@ object WebIdUniformer {
 
     val model = RDFDataMgr.loadModel(webidFile.pathAsString)
 
-    def construct(constructQuery: String):Boolean = {
+    def construct(constructQuery: String): Boolean = {
       QueryHandler.executeConstructQuery(
         constructQuery,
         model,
@@ -46,7 +46,31 @@ object WebIdUniformer {
       logger.error(s"mandatory item(s) not found for ${webidFile.name}.")
       return false
     }
-//
+    true
+  }
+
+    def uniform(webidFile: File): Model = {
+
+      val model = RDFDataMgr.loadModel(webidFile.pathAsString)
+      val constructModel = ModelFactory.createDefaultModel()
+      def construct(constructQuery: String):Boolean = {
+        QueryHandler.executeConstructQuery(
+          constructQuery,
+          model,
+          constructModel
+        )
+
+
+      }
+
+      if (!construct(ConstructQueries.constructWebId())) {
+        logger.error(s"mandatory item(s) not found for ${webidFile.name}.")
+        return constructModel
+      }
+      constructModel
+    }
+
+  //
 //    def log(notFound:String) ={
 //      logger.error(s"no $notFound found for ${webidFile.name}.")
 //    }
@@ -78,7 +102,5 @@ object WebIdUniformer {
 
 
 
-    true
-  }
 
 }

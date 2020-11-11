@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>SIMILE Widgets | Exhibit | Examples | Topher's Breakfast Cereal Character Guide</title>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <link rel='stylesheet' href='http://www.simile-widgets.org/styles/common.css' type='text/css' />
+    
+    <link href="webid.js" type="application/json" rel="exhibit/data" />
+
+    <script src="http://api.simile-widgets.org/exhibit/current/exhibit-api.js"></script>
+    <link rel="exhibit-extension" type="text/javascript" href="http://api.simile-widgets.org/exhibit/current/extensions/time/time-extension.js" />
+
+    <link rel='stylesheet' href='styles.css' type='text/css' />
+  </head>
+  <body>
+    <ul id="path">
+      <li><a href="/">SIMILE Widgets</a></li>
+      <li><a href="/exhibit/">Exhibit</a></li>
+      <li><span>Examples: Topher's Breakfast Cereal Character Guide</span></li>
+    </ul>
+    <table id="header">
+        <tr style="vertical-align:middle">
+            <td><img alt="Breakfast cereal banner" src="banner.png" style="float: left; margin-right: 2em;"/></td>
+            <td>
+                <p>Please refer to 
+                    <a href="http://www.lavasurfer.com/cereal-guide.html" target="_blank">Topher's original site</a>
+                    for copyright information. We are grateful to Topher for letting us host this data on our site.
+                </p>
+                <p>Here is the <a href="cereal-characters.js" target="_blank">Exhibit JSON data file</a>.
+                </p>
+            </td>
+        </tr>
+    </table>
+    <div id="body">
+        <div style="width: 100%">
+            <table
+            style="width:100%;border-spacing:10;border:0"
+                   id="exhibit">
+                <tr>
+                    <td style="width:15%">
+                        <b>Search</b>
+                        <div data-ex-role="facet" data-ex-facet-class="TextSearch"></div>
+                        <hr/>
+                        <div data-ex-role="facet" data-ex-expression=".name" data-ex-facet-label="Name" data-ex-height="15em"></div>
+                        <div data-ex-role="facet" data-ex-expression=".keyname" data-ex-facet-label="Key Name" data-ex-height="20em"></div>
+                    </td>
+                    <td style="width:15%">
+                        <div data-ex-role="facet" data-ex-expression=".webid" data-ex-facet-label="WebId" data-ex-height="15em"></div>
+                        <div data-ex-role="facet" data-ex-expression=".maker" data-ex-facet-label="Maker" data-ex-height="20em"></div>
+                        <div style="text-align:center" data-ex-role="logo"></div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+  </body>
+</html>

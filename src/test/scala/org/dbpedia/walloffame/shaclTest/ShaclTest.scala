@@ -1,7 +1,8 @@
 package org.dbpedia.walloffame.shaclTest
 
-import java.io.{ByteArrayOutputStream, File}
+import java.io.{ByteArrayOutputStream, File => JavaFile}
 
+import better.files.File
 import org.apache.jena.riot.{Lang, RDFDataMgr, RiotException}
 import org.apache.jena.shacl.{ShaclValidator, Shapes}
 import org.apache.jena.shacl.lib.ShLib
@@ -22,8 +23,8 @@ class ShaclTest {
 //
   @Test
   def shouldPrintOutCorrectOutput {
-    val webIdFile = new File("./src/test/resources/wrongWebId.ttl")
-    println(WebIdValidator.validate(webIdFile, new File("./shacl/shapes.ttl")))
+    val webIdFile = File("./src/test/resources/wrongWebId.ttl")
+    println(WebIdValidator.validate(webIdFile.toJava, File("./shacl/shapes.ttl").toJava))
 
 
     //    assertThat(viewCustomerPage.text, containsString("Adrian"))
@@ -31,7 +32,7 @@ class ShaclTest {
 
   @Test
   def shouldSuccess {
-    val webIdFile = new File("./src/test/resources/correctWebId.ttl")
+    val webIdFile = File("./src/test/resources/correctWebId.ttl")
     println(WebIdValidator.validateWithShacl(webIdFile))
 
 
@@ -42,8 +43,8 @@ class ShaclTest {
   def shaclShouldSuccess: Unit = {
 
 
-    val webIdFile = new File("./src/test/resources/correctWebId.ttl")
-    val shapesFile = new File("./shacl/shapes.ttl")
+    val webIdFile = File("./src/test/resources/correctWebId.ttl")
+    val shapesFile = File("./shacl/shapes.ttl")
 
     validate(webIdFile,shapesFile)
 
@@ -55,8 +56,8 @@ class ShaclTest {
   def shaclShouldFail: Unit = {
 
 
-    val webIdFile = new File("./src/test/resources/wrongWebId.ttl")
-    val shapesFile = new File("./shacl/shapes.ttl")
+    val webIdFile = File("./src/test/resources/wrongWebId.ttl")
+    val shapesFile = File("./shacl/shapes.ttl")
 
     validate(webIdFile,shapesFile)
   }
@@ -64,8 +65,8 @@ class ShaclTest {
   def validate(webIdFile: File, shapesFile: File): Boolean = {
 
 
-    val shapesGraph = RDFDataMgr.loadGraph(shapesFile.getPath)
-    val dataGraph = RDFDataMgr.loadGraph(webIdFile.getPath)
+    val shapesGraph = RDFDataMgr.loadGraph(shapesFile.pathAsString)
+    val dataGraph = RDFDataMgr.loadGraph(webIdFile.pathAsString)
     val shapes = Shapes.parse(shapesGraph)
     val report = ShaclValidator.get.validate(shapes, dataGraph)
     ShLib.printReport(report)
@@ -104,17 +105,17 @@ class ShaclTest {
   @Test
   def correctFileShouldPass:Unit= {
 
-    val webIdFile = new File("./src/test/resources/correctWebId.ttl")
-    val shapeFile = new File("./src/test/resources/shape.ttl")
-    println(WebIdValidator.validate(webIdFile,shapeFile))
+    val webIdFile = File("./src/test/resources/correctWebId.ttl")
+    val shapeFile = File("./src/test/resources/shape.ttl")
+    println(WebIdValidator.validate(webIdFile.toJava,shapeFile.toJava))
   }
 
   @Test
   def wrongFileShouldNotPass:Unit= {
 
-    val webIdFile = new File("./src/test/resources/wrongWebId.ttl")
-    val shapeFile = new File("./src/test/resources/shape.ttl")
-    println(WebIdValidator.validate(webIdFile,shapeFile))
+    val webIdFile = File("./src/test/resources/wrongWebId.ttl")
+    val shapeFile = File("./src/test/resources/shape.ttl")
+    println(WebIdValidator.validate(webIdFile.toJava,shapeFile.toJava))
   }
 
 }

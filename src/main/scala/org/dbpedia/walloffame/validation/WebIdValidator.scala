@@ -1,34 +1,35 @@
 package org.dbpedia.walloffame.validation
-import java.io.{ByteArrayInputStream, ByteArrayOutputStream, File, FilenameFilter}
+import java.io.{ByteArrayOutputStream, FilenameFilter, File => JavaFile}
 
+import better.files.File
 import org.apache.jena.riot.Lang
 import org.apache.jena.riot.RDFDataMgr
 import org.apache.jena.shacl.ShaclValidator
-import org.apache.jena.shacl.lib.ShLib
 import org.apache.jena.shacl.Shapes
+
 
 object WebIdValidator {
 
   def validateWithShacl(webIdFile: File): String = {
-    val shapesDir = new File("./shacl")
+    val shapesDir = File("./shacl").toJava
     var result = ""
 
     val listedShapeFiles = shapesDir.listFiles(new FilenameFilter {
-      override def accept(file: File, name: String): Boolean = {
+      override def accept(file: JavaFile, name: String): Boolean = {
         name.matches(".*.ttl")
       }
     })
 
     listedShapeFiles.foreach(
       shapesFile => {
-        val partResult = validate(webIdFile, shapesFile).getOrElse("")
+        val partResult = validate(webIdFile.toJava, shapesFile).getOrElse("")
         if (!(partResult=="")) result=result.concat(s"$partResult\n")
       })
 
     result
   }
 
-  def validate(webIdFile: File, shapesFile: File): Option[String] = {
+  def validate(webIdFile: JavaFile, shapesFile: JavaFile): Option[String] = {
 
 
     val shapesGraph = RDFDataMgr.loadGraph(shapesFile.getPath)

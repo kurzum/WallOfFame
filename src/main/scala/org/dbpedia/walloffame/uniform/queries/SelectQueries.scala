@@ -31,12 +31,13 @@ object SelectQueries {
 
   def getQueryWebIdData(): String = {
     s"""
-       |SELECT ?webid ?maker ?name ?keyvalue {
+       |SELECT ?webid ?maker ?name ?keyname ?keyvalue {
        |  ?webid a <http://xmlns.com/foaf/0.1/PersonalProfileDocument> ;
        |        <http://xmlns.com/foaf/0.1/maker> ?maker .
        |  ?maker <http://xmlns.com/foaf/0.1/name> ?name ;
        |         <http://www.w3.org/ns/auth/cert#key> ?key .
-       |  ?key <http://www.w3.org/ns/auth/cert#modulus> ?keyvalue .
+       |  ?key <http://www.w3.org/1999/02/22-rdf-syntax-ns#label> ?keyname ;
+       |       <http://www.w3.org/ns/auth/cert#modulus> ?keyvalue .
        |}
     """.stripMargin
 

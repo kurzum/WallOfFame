@@ -1,12 +1,14 @@
 package org.dbpedia.walloffame.spring.controller
 
-import java.io.File
 
+import better.files.File
 import com.sun.xml.internal.bind.v2.TODO
 import javax.validation.Valid
 import javax.validation.constraints.NotNull
 import org.apache.jena.riot.RiotException
+import org.dbpedia.walloffame.convert.RDFtoJSONConverter
 import org.dbpedia.walloffame.spring.data.WebId
+import org.dbpedia.walloffame.uniform.WebIdUniformer
 import org.dbpedia.walloffame.validation.WebIdValidator
 import org.dbpedia.walloffame.virtuoso.VirtuosoHandler
 import org.hibernate.validator.constraints.NotEmpty
@@ -36,9 +38,9 @@ class ValidateController {
       validation.copyTo(newWebId)
 
       import java.io.PrintWriter
-      val fileToValidate = new File("webIdToValidate.ttl")
+      val fileToValidate = File("webIdToValidate.ttl")
 
-      new PrintWriter(fileToValidate) {
+      new PrintWriter(fileToValidate.toJava) {
         write(newWebId.webid)
         close
       }
@@ -53,9 +55,11 @@ class ValidateController {
         result = WebIdValidator.validateWithShacl(fileToValidate)
         if(result=="") {
           result= "Your WebId is valid."
-
+          val model = WebIdUniformer.uniform(fileToValidate)
+          RDFtoJSONConverter.toJSON(model)
           //TODO uncomment next line to insert all valid results into virtuoso db
 //          VirtuosoHandler.insertFile(fileToValidate)
+          new ModelAndView("validatedWebId/webid")
         }
       } catch {
         case riot:RiotException => result = riot.toString

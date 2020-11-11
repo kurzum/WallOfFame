@@ -1,0 +1,28 @@
+{
+  "items": [{
+    "keyname": "databus webid",
+    "keyvalue": "AEDDA316D567231BC909C2C8DC0DE99FACA05A72282919B7465CDB740D725BEF31805EE6D67D061F57CED772A34EDB658DED25276A2D342F974565271AFA93E79A04FA8D275D8F0185694D4B64FC7C25EBD1A28181B592381DC965AFEB04DA7D8CB51522876392AF3F1F20AEF00DA7BABE2B918F422667BB02C1A8A69A2BBD7AFE6A7148ED32AFFE5FF8934AC9F50DA191A5C1D99EE90BAC9D8D44A6C306F06398BAD0243A2094E5ACFF18F5381914BD7875EFA2035D4E7B32CC24583B632D9BD96619FC38239FD967A8A42A569A2B7D0201445EFED53BC6C1C5BFEE4A135DF213759AF6A12855451D85AEFDF9E152F77CBC2FA379F9BC441BEDD6961B9FD381",
+    "maker": "https://akirsche.github.io/webid.ttl#this",
+    "name": "Amit Kirschenbaum",
+    "webid": "https://akirsche.github.io/webid.ttl"
+  }],
+  "properties": {
+    "maker": {
+      "valueType": "url"
+    },
+    "primaryTopic": {
+      "valueType": "url"
+    },
+    "type": {
+      "valueType": "url"
+    },
+    "webid": {
+      "valueType": "url"
+    }
+  },
+  "types": {
+    "WebId": {
+      "pluralLabel": "WebIds"
+    }
+  }
+}
