@@ -18,7 +18,8 @@
 
 
     <br>
-    <input type="button" onclick="location.href='/'" value="Back">
 
+    <input type="button" onclick="location.href='/static/exhibit/walloffame.html'" value="Wall of Fame">
+    <input type="button" onclick="location.href='/'" value="Back">
 </body>
 </html>

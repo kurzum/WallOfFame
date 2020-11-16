@@ -1,14 +1,12 @@
 package org.dbpedia.walloffame.shaclTest
 
-import java.io.{ByteArrayOutputStream, File => JavaFile}
+import java.io.ByteArrayOutputStream
 
 import better.files.File
-import org.apache.jena.riot.{Lang, RDFDataMgr, RiotException}
-import org.apache.jena.shacl.{ShaclValidator, Shapes}
+import org.apache.jena.riot.{Lang, RDFDataMgr}
 import org.apache.jena.shacl.lib.ShLib
+import org.apache.jena.shacl.{ShaclValidator, Shapes}
 import org.dbpedia.walloffame.validation.WebIdValidator
-import org.hamcrest.CoreMatchers.containsString
-import org.junit.Assert.assertThat
 import org.junit.Test
 
 class ShaclTest {

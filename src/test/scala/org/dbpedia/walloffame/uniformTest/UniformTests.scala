@@ -1,12 +1,5 @@
 package org.dbpedia.walloffame.uniformTest
 
-import better.files.File
-import org.apache.jena.riot.{Lang, RDFDataMgr}
-import org.dbpedia.walloffame.crawling.WebIdCrawler
-import org.dbpedia.walloffame.uniform.WebIdUniformer
-import org.dbpedia.walloffame.validation.WebIdValidator
-import org.junit.Test
-
 class UniformTests {
 
 //  @Test

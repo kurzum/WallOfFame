@@ -12,9 +12,8 @@
 
 package org.dbpedia.walloffame.webtest.page
 
-import customer.{ViewCustomerPage, AddCustomerPage}
+import org.dbpedia.walloffame.webtest.page.customer.{AddCustomerPage, ViewCustomerPage}
 import org.openqa.selenium.{By, WebDriver}
-import java.lang.String
 
 object HomePage {
   private val DEFAULT_PORT = 9090

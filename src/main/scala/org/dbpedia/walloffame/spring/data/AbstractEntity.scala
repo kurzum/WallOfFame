@@ -12,7 +12,7 @@
 
 package org.dbpedia.walloffame.spring.data
 
-import javax.persistence.{ MappedSuperclass, GeneratedValue, Id }
+import javax.persistence.{GeneratedValue, Id, MappedSuperclass}
 
 @MappedSuperclass
 abstract class AbstractEntity {

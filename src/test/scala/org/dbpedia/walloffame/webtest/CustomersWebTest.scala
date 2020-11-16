@@ -13,8 +13,8 @@
 package org.dbpedia.walloffame.webtest
 
 import org.dbpedia.walloffame.webtest.page.HomePage
-import org.junit.Assert._
 import org.hamcrest.CoreMatchers._
+import org.junit.Assert._
 import org.junit.{After, Test}
 
 class CustomersWebTest extends WebDriverAccess {

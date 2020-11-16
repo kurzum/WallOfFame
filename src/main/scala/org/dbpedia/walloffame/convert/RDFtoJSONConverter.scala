@@ -13,30 +13,29 @@ object RDFtoJSONConverter {
 
     val results = QueryHandler.executeQuery(SelectQueries.getQueryWebIdData(), model)
 
-    val items = new ListBuffer[String]
+    val items = new ListBuffer[ListBuffer[String]]
 
-    val result = results.head
+    results.foreach(result => {
+      val item = new ListBuffer[String]
 
-//    val webid = result.getResource("?webid").toString
-//    val maker = result.getResource("?maker").toString
-//    val name = result.getLiteral("?name").getLexicalForm
-//    val keyname = result.getLiteral("?keyname").getLexicalForm
-//    val keyvalue = result.getLiteral("?keyvalue").getLexicalForm
+      def addToListBuffer(varName:String, entry:String){
+        item +=
+          s"""
+             |"$varName": "$entry"
+             |""".stripMargin
+      }
 
-    def addToListBuffer(varName:String, entry:String){
-      items +=
-        s"""
-           |"$varName": "$entry"
-           |""".stripMargin
-    }
+      addToListBuffer("webid", result.getResource("?webid").toString)
+      addToListBuffer("maker", result.getResource("?maker").toString)
+      addToListBuffer("name", result.getLiteral("?name").getLexicalForm)
+      addToListBuffer("keyname", result.getLiteral("?keyname").getLexicalForm)
+      addToListBuffer("keyvalue", result.getLiteral("?keyvalue").getLexicalForm)
 
-    addToListBuffer("webid", result.getResource("?webid").toString)
-    addToListBuffer("maker", result.getResource("?maker").toString)
-    addToListBuffer("name", result.getLiteral("?name").getLexicalForm)
-    addToListBuffer("keyname", result.getLiteral("?keyname").getLexicalForm)
-    addToListBuffer("keyvalue", result.getLiteral("?keyvalue").getLexicalForm)
+      items += item
+    })
 
-    val rawJSON = s"""
+
+    var rawJSON = s"""
         |{
         |    "types": {
         |        "WebId": {
@@ -58,17 +57,17 @@ object RDFtoJSONConverter {
         |        }
         |    },
         |    "items": [
-        |       { ${items.toList.mkString(",")}
-        |       }
-        |    ]
-        |}
       """.stripMargin
+
+    items.foreach(item => rawJSON = rawJSON.concat(s"{ ${item.toList.mkString(",")} },"))
+
+    rawJSON = rawJSON.dropRight(1).concat("]}")
 
     import spray.json._
     val outJSON= rawJSON.parseJson
 
     import java.io.PrintWriter
-    val outFile = File("./src/main/webapp/WEB-INF/jsp/exhibit/validatedWebId/webid.js")
+    val outFile = File("./src/main/webapp/WEB-INF/static/html/exhibit/webids.js")
 
     new PrintWriter(outFile.toJava) {
       write(outJSON.prettyPrint)

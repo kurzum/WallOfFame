@@ -1,6 +1,6 @@
 package org.dbpedia.walloffame
 
-import java.io.{ByteArrayOutputStream, FileOutputStream}
+import java.io.FileOutputStream
 
 import better.files.File
 import org.apache.jena.riot.{Lang, RDFDataMgr}

@@ -2,10 +2,8 @@ package org.dbpedia.walloffame.validation
 import java.io.{ByteArrayOutputStream, FilenameFilter, File => JavaFile}
 
 import better.files.File
-import org.apache.jena.riot.Lang
-import org.apache.jena.riot.RDFDataMgr
-import org.apache.jena.shacl.ShaclValidator
-import org.apache.jena.shacl.Shapes
+import org.apache.jena.riot.{Lang, RDFDataMgr}
+import org.apache.jena.shacl.{ShaclValidator, Shapes}
 
 
 object WebIdValidator {

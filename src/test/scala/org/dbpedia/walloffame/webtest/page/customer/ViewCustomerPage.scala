@@ -12,8 +12,8 @@
 
 package org.dbpedia.walloffame.webtest.page.customer
 
-import org.openqa.selenium.WebDriver
 import org.dbpedia.walloffame.webtest.page.{HomePage, Page}
+import org.openqa.selenium.WebDriver
 
 class ViewCustomerPage(driver: WebDriver) extends Page[ViewCustomerPage]("customer-view", driver) {
   def deleteCustomer() = click(linkText("Delete the Customer")).expecting[HomePage]

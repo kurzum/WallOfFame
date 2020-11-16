@@ -12,13 +12,15 @@
 
 package org.dbpedia.walloffame.webtest.page
 
-import org.openqa.selenium.{By, WebDriver}
+import java.lang.reflect.InvocationTargetException
+
 import org.hamcrest.CoreMatchers._
 import org.junit.Assert
-import java.lang.reflect.InvocationTargetException
-import collection.JavaConversions
 import org.openqa.selenium.By.ByName
 import org.openqa.selenium.support.ui.{ExpectedCondition, WebDriverWait}
+import org.openqa.selenium.{By, WebDriver}
+
+import scala.collection.JavaConversions
 
 abstract class Page[T <: Page[T]](expectedBodyId: String, val driver: WebDriver) {
 

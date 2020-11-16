@@ -3,8 +3,7 @@ package org.dbpedia.walloffame.uniform
 import better.files.File
 import org.apache.jena.rdf.model.{Model, ModelFactory}
 import org.apache.jena.riot.RDFDataMgr
-import org.dbpedia.walloffame.crawling.WebIdCrawler
-import org.dbpedia.walloffame.uniform.queries.{ConstructQueries, SelectQueries}
+import org.dbpedia.walloffame.uniform.queries.ConstructQueries
 import org.dbpedia.walloffame.validation.WebIdValidator
 import org.slf4j.{Logger, LoggerFactory}
 

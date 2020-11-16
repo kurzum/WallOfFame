@@ -13,9 +13,9 @@
 package org.dbpedia.walloffame.webtest
 
 import org.dbpedia.walloffame.webtest.page.HomePage
-import org.junit.Test
-import org.junit.Assert._
 import org.hamcrest.CoreMatchers._
+import org.junit.Assert._
+import org.junit.Test
 
 class StaticFileWebTest extends WebDriverAccess {
   @Test
