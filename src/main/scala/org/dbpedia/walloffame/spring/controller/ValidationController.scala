@@ -9,6 +9,7 @@ import org.dbpedia.walloffame.convert.RDFtoJSONConverter
 import org.dbpedia.walloffame.spring.data.WebId
 import org.dbpedia.walloffame.uniform.WebIdUniformer
 import org.dbpedia.walloffame.validation.WebIdValidator
+import org.dbpedia.walloffame.virtuoso.VirtuosoHandler
 import org.hibernate.validator.constraints.NotEmpty
 import org.springframework.stereotype.Controller
 import org.springframework.validation.BindingResult
@@ -27,56 +28,9 @@ class ValidationController {
   //viewname is the path to the related jsp file
   def showNewValidationForm() = new ModelAndView("webid/validate.jsp", "validation", new ValidationPageData)
 
-//  @RequestMapping(value = Array("validate"), method = Array(POST))
-//  def sendWebIdToValidate(@Valid @ModelAttribute("validation") validation: ValidatePageData, bindingResult: BindingResult) : String= {
-//
-//      val newWebId = new WebId
-//      validation.copyTo(newWebId)
-//
-//      import java.io.PrintWriter
-//      val fileToValidate = File("webIdToValidate.ttl")
-//
-//      new PrintWriter(fileToValidate.toJava) {
-//        write(newWebId.webid)
-//        close
-//      }
-//
-////      if (!WebIdValidator.validateWithShacl(new File("webIdToValidate.ttl"))) {
-////        bindingResult.rejectValue("webid", "error.parseError", "Your WebId not valid.")
-////      }
-//
-//      var result = ""
-//
-//      try{
-//        result = WebIdValidator.validateWithShacl(fileToValidate)
-//        if(result=="") {
-//          result= "Your WebId is valid."
-//          val model = WebIdUniformer.uniform(fileToValidate)
-//          RDFtoJSONConverter.toJSON(model)
-//          //TODO uncomment next line to insert all valid results into virtuoso db
-////          VirtuosoHandler.insertFile(fileToValidate)
-//          fileToValidate.delete()
-//          "exhibit/webids.htm"
-//        }
-//        else {
-//          fileToValidate.delete()
-//
-//          "exhibit/webids.htm"
-//        }
-//      } catch {
-//        case riot:RiotException => {
-//          result = riot.toString
-//          fileToValidate.delete()
-//
-//          "exhibit/webids.htm"
-//      }
-//
-//
-//    }
-//  }
 
   @RequestMapping(value = Array("validateWebId"), method = Array(POST))
-  def sendWebIdToValidate(@Valid @ModelAttribute("validation") validation: ValidationPageData, bindingResult: BindingResult) : ModelAndView= {
+  def sendWebIdToValidate(@Valid @ModelAttribute("validation") validation: ValidationPageData, bindingResult: BindingResult) = {
 
     if (bindingResult.hasErrors) {
 
@@ -101,11 +55,13 @@ class ValidationController {
         if(result=="") {
           result= "Your WebId is valid."
           val model = WebIdUniformer.uniform(fileToValidate)
-          RDFtoJSONConverter.toJSON(model)
+
           //TODO uncomment next line to insert all valid results into virtuoso db
-          //          VirtuosoHandler.insertFile(fileToValidate)
+          VirtuosoHandler.insertModel(model)
+
           fileToValidate.delete()
-          new ModelAndView("validatedWebId/webid")
+          RDFtoJSONConverter.toJSON(VirtuosoHandler.getModel())
+          "redirect:static/exhibit/walloffame.html"
 
         }
         else {

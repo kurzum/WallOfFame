@@ -10,6 +10,9 @@ import scala.collection.mutable.ListBuffer
 object RDFtoJSONConverter {
 
   def toJSON(model:Model): Unit = {
+//
+//    val stms = model.listStatements()
+//    while (stms.hasNext) println(stms.nextStatement())
 
     val results = QueryHandler.executeQuery(SelectQueries.getQueryWebIdData(), model)
 
@@ -67,7 +70,7 @@ object RDFtoJSONConverter {
     val outJSON= rawJSON.parseJson
 
     import java.io.PrintWriter
-    val outFile = File("./src/main/webapp/WEB-INF/static/html/exhibit/webids.js")
+    val outFile = File("./src/main/webapp/static/exhibit/webids.js")
 
     new PrintWriter(outFile.toJava) {
       write(outJSON.prettyPrint)
