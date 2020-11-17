@@ -12,7 +12,7 @@ object Main {
 
   def main(args: Array[String]): Unit = {
     val uniformedModel = WebIdUniformer.uniformWebIds(WebIdCrawler.crawl())
-    VirtuosoHandler.insertModel(uniformedModel)
+//    VirtuosoHandler.insertModel(uniformedModel)
   }
 
 }

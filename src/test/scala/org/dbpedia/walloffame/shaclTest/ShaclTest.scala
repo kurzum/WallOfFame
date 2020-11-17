@@ -10,54 +10,32 @@ import org.dbpedia.walloffame.validation.WebIdValidator
 import org.junit.Test
 
 class ShaclTest {
-//  @Test
-//  def shouldBeValidated {
-//    val webIdFile = new File("./src/test/resources/webid1.ttl")
-//    WebIdValidator.validate(webIdFile)
-//
-//
-////    assertThat(viewCustomerPage.text, containsString("Adrian"))
-//  }
-//
+
+  val shapeFile = File("./src/main/resources/shacl/shapes.ttl")
+  val testResourceDir = File("./src/test/resources/")
+
   @Test
   def shouldPrintOutCorrectOutput {
-    val webIdFile = File("./src/test/resources/wrongWebId.ttl")
-    println(WebIdValidator.validate(webIdFile.toJava, File("./shacl/shapes.ttl").toJava))
-
-
-    //    assertThat(viewCustomerPage.text, containsString("Adrian"))
+    val webIdFile = testResourceDir / "wrongWebId.ttl"
+    println(WebIdValidator.validate(webIdFile.toJava, shapeFile.toJava))
   }
 
   @Test
   def shouldSuccess {
-    val webIdFile = File("./src/test/resources/correctWebId.ttl")
+    val webIdFile = testResourceDir / "correctWebId.ttl"
     println(WebIdValidator.validateWithShacl(webIdFile))
-
-
-    //    assertThat(viewCustomerPage.text, containsString("Adrian"))
   }
 
   @Test
   def shaclShouldSuccess: Unit = {
-
-
-    val webIdFile = File("./src/test/resources/correctWebId.ttl")
-    val shapesFile = File("./shacl/shapes.ttl")
-
-    validate(webIdFile,shapesFile)
-
-
-
+    val webIdFile = testResourceDir / "correctWebId.ttl"
+    validate(webIdFile,shapeFile)
   }
 
   @Test
   def shaclShouldFail: Unit = {
-
-
-    val webIdFile = File("./src/test/resources/wrongWebId.ttl")
-    val shapesFile = File("./shacl/shapes.ttl")
-
-    validate(webIdFile,shapesFile)
+    val webIdFile = testResourceDir/ "wrongWebId.ttl"
+    validate(webIdFile,shapeFile)
   }
 
   def validate(webIdFile: File, shapesFile: File): Boolean = {
@@ -74,6 +52,20 @@ class ShaclTest {
     out.toString
     ShLib.printReport(report)
     report.conforms()
+  }
+
+
+  @Test
+  def correctFileShouldPass:Unit= {
+
+    val webIdFile = testResourceDir /"correctWebId.ttl"
+    println(WebIdValidator.validate(webIdFile.toJava,shapeFile.toJava))
+  }
+
+  @Test
+  def wrongFileShouldNotPass:Unit= {
+    val webIdFile = testResourceDir / "wrongWebId.ttl"
+    println(WebIdValidator.validate(webIdFile.toJava,shapeFile.toJava))
   }
 
   @Test
@@ -99,22 +91,5 @@ class ShaclTest {
                 |] .
                 |""".stripMargin
   }
-
-  @Test
-  def correctFileShouldPass:Unit= {
-
-    val webIdFile = File("./src/test/resources/correctWebId.ttl")
-    val shapeFile = File("./src/test/resources/shape.ttl")
-    println(WebIdValidator.validate(webIdFile.toJava,shapeFile.toJava))
-  }
-
-  @Test
-  def wrongFileShouldNotPass:Unit= {
-
-    val webIdFile = File("./src/test/resources/wrongWebId.ttl")
-    val shapeFile = File("./src/test/resources/shape.ttl")
-    println(WebIdValidator.validate(webIdFile.toJava,shapeFile.toJava))
-  }
-
 }
 
