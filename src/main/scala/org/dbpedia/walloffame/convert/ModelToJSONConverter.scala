@@ -7,12 +7,12 @@ import org.dbpedia.walloffame.uniform.queries.SelectQueries
 
 import scala.collection.mutable.ListBuffer
 
-object RDFtoJSONConverter {
+object ModelToJSONConverter {
 
-  def toJSON(model:Model): Unit = {
-//
-//    val stms = model.listStatements()
-//    while (stms.hasNext) println(stms.nextStatement())
+  def toJSON(model: Model): File = {
+    //
+    //    val stms = model.listStatements()
+    //    while (stms.hasNext) println(stms.nextStatement())
 
     val results = QueryHandler.executeQuery(SelectQueries.getQueryWebIdData(), model)
 
@@ -21,7 +21,7 @@ object RDFtoJSONConverter {
     results.foreach(result => {
       val item = new ListBuffer[String]
 
-      def addToListBuffer(varName:String, entry:String){
+      def addToListBuffer(varName: String, entry: String) {
         item +=
           s"""
              |"$varName": "$entry"
@@ -38,28 +38,29 @@ object RDFtoJSONConverter {
     })
 
 
-    var rawJSON = s"""
-        |{
-        |    "types": {
-        |        "WebId": {
-        |            "pluralLabel": "WebIds"
-        |        }
-        |    },
-        |    "properties": {
-        |        "webid": {
-        |            "valueType": "url"
-        |        },
-        |        "type": {
-        |            "valueType": "url"
-        |        },
-        |        "maker": {
-        |            "valueType": "url"
-        |        },
-        |        "primaryTopic": {
-        |            "valueType": "url"
-        |        }
-        |    },
-        |    "items": [
+    var rawJSON =
+      s"""
+         |{
+         |    "types": {
+         |        "WebId": {
+         |            "pluralLabel": "WebIds"
+         |        }
+         |    },
+         |    "properties": {
+         |        "webid": {
+         |            "valueType": "url"
+         |        },
+         |        "type": {
+         |            "valueType": "url"
+         |        },
+         |        "maker": {
+         |            "valueType": "url"
+         |        },
+         |        "primaryTopic": {
+         |            "valueType": "url"
+         |        }
+         |    },
+         |    "items": [
       """.stripMargin
 
     items.foreach(item => rawJSON = rawJSON.concat(s"{ ${item.toList.mkString(",")} },"))
@@ -67,7 +68,7 @@ object RDFtoJSONConverter {
     rawJSON = rawJSON.dropRight(1).concat("]}")
 
     import spray.json._
-    val outJSON= rawJSON.parseJson
+    val outJSON = rawJSON.parseJson
 
     import java.io.PrintWriter
     val outFile = File("./src/main/webapp/static/exhibit/webids.js")
@@ -77,5 +78,6 @@ object RDFtoJSONConverter {
       close
     }
 
+    outFile
   }
 }

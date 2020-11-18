@@ -9,12 +9,13 @@ import virtuoso.jena.driver.{VirtGraph, VirtModel}
 
 object VirtuosoHandler {
 
-  val graphName ="http://webids"
+  val graphName = "http://webids"
   val url = "jdbc:virtuoso://localhost:1111/charset=UTF-8/log_enable=2"
   val user = "dba"
   val password = "dba"
+  val toLoadDir = File("./docker/toLoad")
 
-  def insertFile(file:File)={
+  def insertFile(file: File) = {
     try {
       val model: Model = VirtModel.openDatabaseModel(this.graphName, this.url, this.user, this.password)
       val in: InputStream = FileManager.get().open(file.pathAsString)
@@ -24,28 +25,30 @@ object VirtuosoHandler {
       model.read(new InputStreamReader(in), null, "TURTLE")
       model.close()
     } catch {
-      case e:Exception => System.out.println("Ex="+e)
+      case e: Exception => System.out.println("Ex=" + e)
     }
   }
 
-  def insertModel(model:Model)={
-      val virtmodel: VirtModel = VirtModel.openDatabaseModel(this.graphName, this.url, this.user, this.password)
+  def insertModel(model: Model) = {
+    val virtmodel: VirtModel = VirtModel.openDatabaseModel(this.graphName, this.url, this.user, this.password)
 
-      virtmodel.add(model)
-      virtmodel.close()
+    virtmodel.add(model)
+    virtmodel.close()
   }
 
-  def clearGraph()={
+  def clearGraph() = {
     val set = new VirtGraph(this.graphName, this.url, this.user, this.password)
     set.clear()
   }
 
-  def getModel():Model={
+  def getModel(): Model = {
     val model: Model = VirtModel.openDatabaseModel(this.graphName, this.url, this.user, this.password)
     model
   }
 
-
+  def moveFileToLoadDir(file: File): Unit = {
+    file.moveToDirectory(toLoadDir)
+  }
 
 
 }

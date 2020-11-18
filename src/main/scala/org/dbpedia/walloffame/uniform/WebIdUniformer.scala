@@ -9,27 +9,27 @@ import org.slf4j.{Logger, LoggerFactory}
 
 object WebIdUniformer {
 
-  val logger:Logger = LoggerFactory.getLogger("validator")
+  val logger: Logger = LoggerFactory.getLogger("validator")
 
-  def uniformWebIds(dir:File):Model = {
+  def uniformWebIds(dir: File): Model = {
 
     val constructModel = ModelFactory.createDefaultModel()
 
     if (dir.exists && dir.isDirectory) {
       dir.listRecursively().foreach(file => {
         println(file.pathAsString)
-        if(WebIdValidator.validateWithShacl(file).isEmpty) uniform(file, constructModel)
+        if (WebIdValidator.validateWithShacl(file).isEmpty) uniform(file, constructModel)
       })
     }
 
-    val stmts = constructModel.listStatements()
-    while (stmts.hasNext) println(stmts.nextStatement())
+    //    val stmts = constructModel.listStatements()
+    //    while (stmts.hasNext) println(stmts.nextStatement())
 
     constructModel
   }
 
 
-  def uniform(webidFile: File, constructModel:Model): Boolean = {
+  def uniform(webidFile: File, constructModel: Model): Boolean = {
 
     val model = RDFDataMgr.loadModel(webidFile.pathAsString)
 
@@ -48,58 +48,26 @@ object WebIdUniformer {
     true
   }
 
-    def uniform(webidFile: File): Model = {
+  def uniform(webidFile: File): Model = {
 
-      val model = RDFDataMgr.loadModel(webidFile.pathAsString)
-      val constructModel = ModelFactory.createDefaultModel()
-      def construct(constructQuery: String):Boolean = {
-        QueryHandler.executeConstructQuery(
-          constructQuery,
-          model,
-          constructModel
-        )
+    val model = RDFDataMgr.loadModel(webidFile.pathAsString)
+    val constructModel = ModelFactory.createDefaultModel()
+
+    def construct(constructQuery: String): Boolean = {
+      QueryHandler.executeConstructQuery(
+        constructQuery,
+        model,
+        constructModel
+      )
 
 
-      }
-
-      if (!construct(ConstructQueries.constructWebId())) {
-        logger.error(s"mandatory item(s) not found for ${webidFile.name}.")
-        return constructModel
-      }
-      constructModel
     }
 
-  //
-//    def log(notFound:String) ={
-//      logger.error(s"no $notFound found for ${webidFile.name}.")
-//    }
-//
-//    ConstructQueries.getClass.getMethods.foreach(
-//      meth =>
-//        if (!construct(meth)) {
-//          log("makerURL")
-//          return false
-//        }
-//    )
-//
-//    val webIdResource = QueryHandler.executeSingleResultQuery(SelectQueries.getWebIdURL(), constructModel).asResource()
-//    if (!construct(ConstructQueries.constructMakerURL(webIdResource))) {
-//      log("makerURL")
-//      return false
-//    }
-//
-//    val makerResource = QueryHandler.executeSingleResultQuery(SelectQueries.getMakerURL(webIdResource), constructModel).asResource()
-//    if (!construct(ConstructQueries.constructMakerName(makerResource))) {
-//      log("makerName")
-//      return false
-//    }
-//
-//    if (!construct(ConstructQueries.constructCertValue(makerResource))) {
-//      log("certificate")
-//      return false
-//    }
-
-
-
+    if (!construct(ConstructQueries.constructWebId())) {
+      logger.error(s"mandatory item(s) not found for ${webidFile.name}.")
+      return constructModel
+    }
+    constructModel
+  }
 
 }

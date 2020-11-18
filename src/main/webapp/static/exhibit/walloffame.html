@@ -1,88 +1,91 @@
 <!DOCTYPE HTML>
 <html>
-  <head>
-    <title>SIMILE Widgets | Exhibit | Examples | Topher's Breakfast Cereal Character Guide</title>
-    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-    <link rel='stylesheet' href='http://www.simile-widgets.org/styles/common.css' type='text/css' />
-    
-    <link href="webids.js" type="application/json" rel="exhibit/data" />
+<head>
+    <title>DBpedia's Wall of Fame</title>
+    <meta content="text/html;charset=UTF-8" http-equiv="content-type"/>
+    <link href='http://www.simile-widgets.org/styles/common.css' rel='stylesheet' type='text/css'/>
+
+    <link href="webids.js" rel="exhibit/data" type="application/json"/>
 
     <script src="http://api.simile-widgets.org/exhibit/current/exhibit-api.js"></script>
-    <link rel="exhibit-extension" type="text/javascript" href="http://api.simile-widgets.org/exhibit/current/extensions/time/time-extension.js" />
+    <link href="http://api.simile-widgets.org/exhibit/current/extensions/time/time-extension.js" rel="exhibit-extension"
+          type="text/javascript"/>
 
-    <link rel='stylesheet' href='styles.css' type='text/css' />
-  </head>
-  <body>
-    <ul id="path">
-      <li><a href="/">SIMILE Widgets</a></li>
-      <li><a href="/exhibit/">Exhibit</a></li>
-      <li><span>Examples: Topher's Breakfast Cereal Character Guide</span></li>
-    </ul>
-    <table id="header">
-        <tr style="vertical-align:middle">
-            <td><img alt="Breakfast cereal banner" src="banner.png" style="float: left; margin-right: 2em;"/></td>
-            <td>
-                <p>Please refer to 
-                    <a href="http://www.lavasurfer.com/cereal-guide.html" target="_blank">Topher's original site</a>
-                    for copyright information. We are grateful to Topher for letting us host this data on our site.
-                </p>
-                <p>Here is the <a href="cereal-characters.js" target="_blank">Exhibit JSON data file</a>.
-                </p>
-            </td>
-        </tr>
-    </table>
-    <div id="body">
-        <div style="width: 100%">
-            <table
-            style="width:100%;border-spacing:10;border:0"
-                   id="exhibit">
-                <tr>
-                    <td style="width:15%">
-                        <b>Search</b>
-                        <div data-ex-role="facet" data-ex-facet-class="TextSearch"></div>
-                        <hr/>
-                        <div data-ex-role="facet" data-ex-expression=".name" data-ex-facet-label="Name" data-ex-height="15em"></div>
-                        <div data-ex-role="facet" data-ex-expression=".keyname" data-ex-facet-label="Key Name" data-ex-height="20em"></div>
-                    </td>
+    <link href='styles.css' rel='stylesheet' type='text/css'/>
+</head>
+<body>
+<ul id="path">
+    <li><a href="?">Wall of Fame</a></li>
+    <li><a href="/validate">Validate WebId</a></li>
+</ul>
+<table id="header">
+    <tr style="vertical-align:middle">
+        <td><img alt="DBpedia" src="DBpediaLogo.svg" style="float: left; margin-right: 2em;"/></td>
+        <td>
+            <p> Welcome to DBpedia's Wall of Fame. Here you can have a look at all Users registered on the DBpedia
+                Databus. <br>
+                Additionally, you can validate and publish your own WebId here. <br><br>
+                For further information about WebIds check <a href="https://github.com/dbpedia/webid" target="_blank">DBpedia's
+                    WebId Repository</a>, and the
+                <a href="https://forum.dbpedia.org/">DBpedia Forum</a>.
+            </p>
+        </td>
+    </tr>
+</table>
+<div id="body">
+    <div style="width: 100%">
+        <table
+                id="exhibit"
+                style="width:100%;border-spacing:10;border:0">
+            <tr>
+                <td style="width:15%">
+                    <b>Search</b>
+                    <div data-ex-facet-class="TextSearch" data-ex-role="facet"></div>
+                    <hr/>
+                    <div data-ex-expression=".name" data-ex-facet-label="Name" data-ex-height="15em"
+                         data-ex-role="facet"></div>
+                    <div data-ex-expression=".keyname" data-ex-facet-label="Key Name" data-ex-height="20em"
+                         data-ex-role="facet"></div>
+                </td>
 
-                    <td>
-                        <div data-ex-role="viewPanel">
-                            <div data-ex-role="lens" class="item" style="display: none;">
-                                <table style="border-spacing:5">
-                                    <tr>
-                                        <td>
-                                            <h1><span data-ex-content=".name" ></span></h1>
-                                            <h2>Maker: <span data-ex-content=".maker"></span></h2>
+                <td>
+                    <div data-ex-role="viewPanel">
+                        <div class="item" data-ex-role="lens" style="display: none;">
+                            <table style="border-spacing:5">
+                                <tr>
+                                    <td>
+                                        <h1><span data-ex-content=".name"></span></h1>
+                                        <h2>Maker: <span data-ex-content=".maker"></span></h2>
 
-                                            Public Key:
-                                            <p data-ex-content=".keyname"></p>
-                                            <p data-ex-content=".keyvalue"></p>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-                            <div data-ex-role="view"
-                                 data-ex-view-class="Thumbnail"
-                                 data-ex-show-all="true"
-                                 data-ex-paginate="true"
-                                 data-ex-possible-orders=".name, .maker, .keyname, .keyvalue">
-
-                                <table data-ex-role="lens" class="itemThumbnail" style="display: none;">
-                                    <tr>
-                                        <td style="vertial-align:bottom" class="itemThumbnail-thumbnailContainer">
-                                            <div style="position: relative"> <span data-ex-content=".name"></span></div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="itemThumbnail-caption"><span data-ex-content="value"></span> asd</td>
-                                    </tr>
-                                </table>
-                            </div>
+                                        Public Key:
+                                        <p data-ex-content=".keyname"></p>
+                                        <p data-ex-content=".keyvalue"></p>
+                                    </td>
+                                </tr>
+                            </table>
                         </div>
-                    </td>
-                </tr>
-            </table>
-        </div>
+                        <div data-ex-paginate="true"
+                             data-ex-possible-orders=".name, .maker, .keyname, .keyvalue"
+                             data-ex-role="view"
+                             data-ex-show-all="true"
+                             data-ex-view-class="Thumbnail">
+
+                            <table class="itemThumbnail" data-ex-role="lens" style="display: none;">
+                                <tr>
+                                    <td class="itemThumbnail-thumbnailContainer" style="vertical-align:bottom">
+                                        <div style="position: relative"><span data-ex-content=".name"></span></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="itemThumbnail-caption"><span data-ex-content="value"></span> asd</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
     </div>
-  </body>
+</div>
+</body>
 </html>

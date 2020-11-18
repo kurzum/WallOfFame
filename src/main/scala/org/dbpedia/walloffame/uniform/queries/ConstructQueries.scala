@@ -4,7 +4,7 @@ import org.apache.jena.rdf.model.Resource
 
 object ConstructQueries {
 
-  def constructWebId():String ={
+  def constructWebId(): String = {
     s"""
        |PREFIX foaf: <http://xmlns.com/foaf/0.1/>
        |PREFIX cert: <http://www.w3.org/ns/auth/cert#>

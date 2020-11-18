@@ -1,6 +1,5 @@
 package org.dbpedia.walloffame.spring.controller
 
-
 import java.io.ByteArrayOutputStream
 
 import org.apache.jena.riot.{Lang, RDFDataMgr}
@@ -16,7 +15,7 @@ class WebIdCrawlController {
   @RequestMapping(value = Array("/getWebIds"), method = Array(GET))
   //viewname is the path to the related jsp file
   @ResponseBody
-  def crawlAndUniformWebIds():String = {
+  def crawlAndUniformWebIds(): String = {
     val uniformedModel = WebIdUniformer.uniformWebIds(WebIdCrawler.crawl())
 
     val out = new ByteArrayOutputStream()

@@ -1,4 +1,5 @@
 package org.dbpedia.walloffame.validation
+
 import java.io.{ByteArrayOutputStream, FilenameFilter, File => JavaFile}
 
 import better.files.File
@@ -8,7 +9,7 @@ import org.apache.jena.shacl.{ShaclValidator, Shapes}
 
 object WebIdValidator {
 
-  val shapesDir = File("./src/main/resources/shacl")
+  val shapesDir = File("./shacl")
 
 
   def validateWithShacl(webIdFile: File): String = {
@@ -24,14 +25,13 @@ object WebIdValidator {
     listedShapeFiles.foreach(
       shapesFile => {
         val partResult = validate(webIdFile.toJava, shapesFile).getOrElse("")
-        if (!(partResult=="")) result=result.concat(s"$partResult\n")
+        if (!(partResult == "")) result = result.concat(s"$partResult\n")
       })
 
     result
   }
 
   def validate(webIdFile: JavaFile, shapesFile: JavaFile): Option[String] = {
-
 
     val shapesGraph = RDFDataMgr.loadGraph(shapesFile.getPath)
     val dataGraph = RDFDataMgr.loadGraph(webIdFile.getPath)
@@ -41,7 +41,7 @@ object WebIdValidator {
     val out = new ByteArrayOutputStream()
     RDFDataMgr.write(out, report.getModel, Lang.TTL)
 
-    if(report.conforms()) None
+    if (report.conforms()) None
     else Option(out.toString)
   }
 }
