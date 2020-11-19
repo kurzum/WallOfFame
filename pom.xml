@@ -19,7 +19,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
         <scala.version>2.11.12</scala.version>
-        <jena.version>3.13.0</jena.version>
+        <jena.version>3.14.0</jena.version>
     </properties>
 
     <dependencies>
@@ -48,12 +48,23 @@
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
 
         <!-- JENA -->
         <dependency>
             <groupId>org.apache.jena</groupId>
             <artifactId>jena-arq</artifactId>
             <version>${jena.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.github.jsonld-java.jsonld-java</groupId>
+                    <artifactId>jsonld-java</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.jena</groupId>
@@ -70,11 +81,10 @@
             <artifactId>jena-core</artifactId>
             <version>${jena.version}</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.apache.jena/jena-shacl -->
         <dependency>
             <groupId>org.apache.jena</groupId>
             <artifactId>jena-shacl</artifactId>
-            <version>3.13.0</version>
+            <version>${jena.version}</version>
         </dependency>
         <!-- JENA -->
 
@@ -82,14 +92,14 @@
         <!-- These do not have a Maven repository -->
         <dependency>
             <groupId>com.openlink.virtuoso</groupId>
-            <artifactId>virtjdbc4</artifactId>
-            <version>4.0</version>
+            <artifactId>virtjdbc4-1</artifactId>
+            <version>7.1.0</version>
         </dependency>
 
         <dependency>
             <groupId>com.openlink.virtuoso</groupId>
-            <artifactId>virt_jena3</artifactId>
-            <version>3.0</version>
+            <artifactId>virtjena3</artifactId>
+            <version>7.1.0</version>
         </dependency>
         <!-- VIRTUOSO -->
 
@@ -106,6 +116,15 @@
         </dependency>
 
     </dependencies>
+
+
+    <repositories>
+        <repository>
+            <id>maven.aksw.snapshots</id>
+            <name>AKSW Snapshot Repository</name>
+            <url>http://maven.aksw.org/archiva/repository/internal</url>
+        </repository>
+    </repositories>
 
     <build>
         <plugins>

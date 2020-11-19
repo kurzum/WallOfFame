@@ -35,10 +35,11 @@ class ValidationController {
     try {
 
       result = WebIdValidator.validateWithShacl(fileToValidate)
+
       if (result == "") {
-        result = "Your WebId is valid."
+        //valid webid
+
         val model = WebIdUniformer.uniform(fileToValidate)
-        //TODO uncomment next line to insert all valid results into virtuoso db
         VirtuosoHandler.insertModel(model)
 
         fileToValidate.delete()

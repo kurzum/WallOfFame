@@ -4,11 +4,12 @@
     <title>Validation Result</title>
 </head>
 <body id="result">
-${result}
-
-</br>
 <input type="button" onclick="location.href='/validate'" value="Validate WebId">
-</br>
+
 <input type="button" onclick="location.href='/static/exhibit/walloffame.html'" value="Wall of Fame">
+</br>
+</br>
+Your WebId has the following error: </br>
+${result}
 </body>
 </html>
