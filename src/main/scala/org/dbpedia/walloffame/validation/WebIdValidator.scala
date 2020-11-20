@@ -9,14 +9,12 @@ import org.apache.jena.shacl.{ShaclValidator, Shapes}
 
 object WebIdValidator {
 
-  val shapesDir = File("./shacl")
-
 
   def validateWithShacl(webIdFile: File): String = {
-    val shapDir = shapesDir.toJava
+    val shapDir = File(getClass.getClassLoader.getResource("/shapes/").getFile)
     var result = ""
 
-    val listedShapeFiles = shapDir.listFiles(new FilenameFilter {
+    val listedShapeFiles = shapDir.toJava.listFiles(new FilenameFilter {
       override def accept(file: JavaFile, name: String): Boolean = {
         name.matches(".*.ttl")
       }
