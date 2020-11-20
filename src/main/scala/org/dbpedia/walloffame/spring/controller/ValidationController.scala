@@ -2,17 +2,21 @@ package org.dbpedia.walloffame.spring.controller
 
 import better.files.File
 import org.apache.jena.riot.RiotException
+import org.dbpedia.walloffame.Config
 import org.dbpedia.walloffame.convert.ModelToJSONConverter
 import org.dbpedia.walloffame.uniform.WebIdUniformer
 import org.dbpedia.walloffame.validation.WebIdValidator
 import org.dbpedia.walloffame.virtuoso.VirtuosoHandler
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.{GetMapping, PostMapping, RequestParam}
 import org.springframework.web.servlet.ModelAndView
 
 @Controller
-class ValidationController {
+class ValidationController() {
 
+  @Autowired
+  private var config: Config = _
 
   //value = Array("url") is the url the resulting site will be located at
   @GetMapping(value = Array("/", "/validate"))
@@ -40,10 +44,21 @@ class ValidationController {
         //valid webid
 
         val model = WebIdUniformer.uniform(fileToValidate)
-        VirtuosoHandler.insertModel(model)
+
+        var wait = true
+        while (wait) {
+          try {
+            VirtuosoHandler.insertModel(model,config.virtuoso)
+            wait = false
+          } catch {
+            case e: Exception =>
+              println("waiting for vos to start up")
+              Thread.sleep(1000)
+          }
+        }
 
         fileToValidate.delete()
-        ModelToJSONConverter.toJSON(VirtuosoHandler.getModel())
+        ModelToJSONConverter.toJSON(VirtuosoHandler.getModel(config.virtuoso))
         "redirect:static/exhibit/walloffame.html"
 
       }
