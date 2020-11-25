@@ -18,20 +18,21 @@ object WebIdValidator {
 
 
     var result = ""
-    val tmpShapeFile = File(".tmpShapeFile.ttl").toJava
+    val tmpShapeFile = File("./tmpShapeFile.ttl").toJava
     for (resource <- resources) {
       val is = resource.getInputStream
       val in = scala.io.Source.fromInputStream(is)
       val out = new java.io.PrintWriter(tmpShapeFile)
       try {
         in.getLines().foreach(out.println(_))
-        val partResult = validate(webIdFile.toJava, tmpShapeFile).getOrElse("")
-        if (!(partResult == "")) result = result.concat(s"$partResult\n")
       }
       finally {
         out.close
-        tmpShapeFile.delete()
       }
+
+      val partResult = validate(webIdFile.toJava, tmpShapeFile).getOrElse("")
+      if (!(partResult == "")) result = result.concat(s"$partResult\n")
+      tmpShapeFile.delete()
     }
 
 //    println(getClass.getClassLoader.getResource("shacl"))
@@ -68,7 +69,6 @@ object WebIdValidator {
 
     val out = new ByteArrayOutputStream()
     RDFDataMgr.write(out, report.getModel, Lang.TTL)
-
     if (report.conforms()) None
     else Option(out.toString)
   }

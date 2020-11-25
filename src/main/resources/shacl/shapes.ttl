@@ -5,32 +5,53 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix cert: <http://www.w3.org/ns/auth/cert#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/>
 
 ex:WebIdShape
     a sh:NodeShape ;
-    sh:targetClass <http://xmlns.com/foaf/0.1/PersonalProfileDocument> ;
+    sh:targetClass foaf:PersonalProfileDocument ;
     sh:property [                 
-        sh:path <http://xmlns.com/foaf/0.1/maker> ;
+        sh:path foaf:maker ;
         sh:minCount 1;
         sh:maxCount 1;
     ] ;
     sh:property [
-        sh:path <http://xmlns.com/foaf/0.1/primaryTopic> ;
+        sh:path foaf:primaryTopic ;
         sh:minCount 1;
         sh:maxCount 1;
     ] .
     
 ex:PersonShape
     a sh:NodeShape ;
-    sh:targetClass <http://xmlns.com/foaf/0.1/Person> ;
+    sh:targetClass foaf:Person ;
     sh:property [                 
-        sh:path <http://xmlns.com/foaf/0.1/name> ;
+        sh:path foaf:name ;
         sh:minCount 1;
         sh:maxCount 1;
     ] ;
     sh:property [
-        sh:path <http://www.w3.org/ns/auth/cert#key> ;
+        sh:path cert:key ;
         sh:minCount 1;
-        sh:maxCount 1;
     ] .  
     
+ex:KeyShape
+    a sh:NodeShape ;
+    sh:targetClass cert:RSAPublicKey ;
+    sh:property [
+        sh:path rdf:label ;
+        sh:minCount 1;
+        sh:maxCount 1;
+    ] ;  
+    sh:property [
+        sh:path cert:modulus ;
+        sh:minCount 1;
+        sh:maxCount 1;
+        sh:dataType xsd:hexBinary ;
+    ] ;
+    sh:property [
+        sh:path cert:exponent ;
+        sh:minCount 1;
+        sh:maxCount 1;
+        sh:dataType xsd:nonNegativeInteger ;
+    ] .

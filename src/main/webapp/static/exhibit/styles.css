@@ -38,9 +38,11 @@ tr {
     background: #E6E5FE;
 }
 
-.item {
-    width: 120px;
-}
+/*.item {*/
+/*    display:block;*/
+/*    width:300px;*/
+/*    word-wrap:break-word;*/
+/*}*/
 
 .item h1 {
     font-size: 120%;

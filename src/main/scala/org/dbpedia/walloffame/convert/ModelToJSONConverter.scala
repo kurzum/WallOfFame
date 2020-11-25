@@ -75,7 +75,10 @@ object ModelToJSONConverter {
 //    val resources = resolver.getResources("classpath:shacl/*.ttl")
 
     import java.io.PrintWriter
-    val outFile = File("webids.js")
+    try{
+
+    }
+    val outFile = File("./src/main/webapp/static/exhibit/webids.js")
 
     new PrintWriter(outFile.toJava) {
       write(outJSON.prettyPrint)

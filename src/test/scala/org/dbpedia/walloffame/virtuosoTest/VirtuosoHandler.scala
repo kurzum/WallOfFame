@@ -75,6 +75,12 @@ class VirtuosoHandler {
 
   }
 
+  @Test
+  def shouldDisplayAllEntries(): Unit ={
+    readFromGraph("http://webids", new VirtGraph("jdbc:virtuoso://localhost:1111", "dba", "dba"))
+
+  }
+
   def clearGraph(graphName: String)={
     val set = new VirtGraph(graphName,"jdbc:virtuoso://localhost:1111", "dba", "dba")
     set.clear()
