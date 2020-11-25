@@ -117,20 +117,5 @@ class ShaclTest {
 
     assert(!shapes.isEmpty)
   }
-
-  @Test
-  def fail:Unit={
-    println(WebIdValidator.validateWithShacl(File("./webIdToValidate.ttl")))
-  }
-
-  @Test
-  def success:Unit={
-    WebIdValidator.validate(File("./webIdToValidate.ttl").toJava, shapeFile.toJava)
-  }
-
-  @Test
-  def success2:Unit={
-    WebIdValidator.validate(File("./webIdToValidate.ttl").toJava, File("./tmpShapeFile.ttl").toJava)
-  }
 }
 
