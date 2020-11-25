@@ -1,0 +1,36 @@
+@prefix dash: <http://datashapes.org/dash#> .
+@prefix ex: <http://example.com/ns#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:WebIdShape
+    a sh:NodeShape ;
+    sh:targetClass <http://xmlns.com/foaf/0.1/PersonalProfileDocument> ;
+    sh:property [                 
+        sh:path <http://xmlns.com/foaf/0.1/maker> ;
+        sh:minCount 1;
+        sh:maxCount 1;
+    ] ;
+    sh:property [
+        sh:path <http://xmlns.com/foaf/0.1/primaryTopic> ;
+        sh:minCount 1;
+        sh:maxCount 1;
+    ] .
+    
+ex:PersonShape
+    a sh:NodeShape ;
+    sh:targetClass <http://xmlns.com/foaf/0.1/Person> ;
+    sh:property [                 
+        sh:path <http://xmlns.com/foaf/0.1/name> ;
+        sh:minCount 1;
+        sh:maxCount 1;
+    ] ;
+    sh:property [
+        sh:path <http://www.w3.org/ns/auth/cert#key> ;
+        sh:minCount 1;
+        sh:maxCount 1;
+    ] .  
+    

@@ -58,8 +58,9 @@ class ValidationController() {
         }
 
         fileToValidate.delete()
-        ModelToJSONConverter.toJSON(VirtuosoHandler.getModel(config.virtuoso))
-        "redirect:static/exhibit/walloffame.html"
+        val webids = ModelToJSONConverter.toJSON(VirtuosoHandler.getModel(config.virtuoso))
+//        val webids = ModelToJSONConverter.toJSON(model)
+        new ModelAndView("redirect:static/exhibit/walloffame.html", "webids" , webids)
 
       }
       else {

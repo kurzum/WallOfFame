@@ -70,8 +70,12 @@ object ModelToJSONConverter {
     import spray.json._
     val outJSON = rawJSON.parseJson
 
+//    import org.springframework.core.io.support.PathMatchingResourcePatternResolver
+//    val resolver = new PathMatchingResourcePatternResolver
+//    val resources = resolver.getResources("classpath:shacl/*.ttl")
+
     import java.io.PrintWriter
-    val outFile = File("./src/main/webapp/static/exhibit/webids.js")
+    val outFile = File("webids.js")
 
     new PrintWriter(outFile.toJava) {
       write(outJSON.prettyPrint)

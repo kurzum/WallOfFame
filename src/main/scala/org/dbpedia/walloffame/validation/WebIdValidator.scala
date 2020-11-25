@@ -1,38 +1,68 @@
 package org.dbpedia.walloffame.validation
 
-import java.io.{ByteArrayOutputStream, FilenameFilter, File => JavaFile}
+import java.io.{BufferedOutputStream, BufferedReader, ByteArrayOutputStream, FileOutputStream, FilenameFilter, InputStreamReader, File => JavaFile}
 
 import better.files.File
 import org.apache.jena.riot.{Lang, RDFDataMgr}
 import org.apache.jena.shacl.{ShaclValidator, Shapes}
+import org.springframework.core.io.ClassPathResource
 
 
 object WebIdValidator {
 
 
   def validateWithShacl(webIdFile: File): String = {
-    val shapDir = File(getClass.getClassLoader.getResource("/shapes/").getFile)
+    import org.springframework.core.io.support.PathMatchingResourcePatternResolver
+    val resolver = new PathMatchingResourcePatternResolver
+    val resources = resolver.getResources("classpath:shacl/*.ttl")
+
+
     var result = ""
-
-    val listedShapeFiles = shapDir.toJava.listFiles(new FilenameFilter {
-      override def accept(file: JavaFile, name: String): Boolean = {
-        name.matches(".*.ttl")
-      }
-    })
-
-    listedShapeFiles.foreach(
-      shapesFile => {
-        val partResult = validate(webIdFile.toJava, shapesFile).getOrElse("")
+    val tmpShapeFile = File(".tmpShapeFile.ttl").toJava
+    for (resource <- resources) {
+      val is = resource.getInputStream
+      val in = scala.io.Source.fromInputStream(is)
+      val out = new java.io.PrintWriter(tmpShapeFile)
+      try {
+        in.getLines().foreach(out.println(_))
+        val partResult = validate(webIdFile.toJava, tmpShapeFile).getOrElse("")
         if (!(partResult == "")) result = result.concat(s"$partResult\n")
-      })
+      }
+      finally {
+        out.close
+        tmpShapeFile.delete()
+      }
+    }
+
+//    println(getClass.getClassLoader.getResource("shacl"))
+//    val shapDir = File(getClass.getClassLoader.getResource("shacl").getFile)
+//
+//    shapDir.children.foreach(println(_))
+//    var result = ""
+//
+//
+//
+//    val listedShapeFiles = shapDir.toJava.listFiles(new FilenameFilter {
+//      override def accept(file: JavaFile, name: String): Boolean = {
+//        name.matches(".*.ttl")
+//      }
+//    })
+
+//    listedShapeFiles.foreach(
+//      shapesFile => {
+//        val partResult = validate(webIdFile.toJava, shapesFile).getOrElse("")
+//        if (!(partResult == "")) result = result.concat(s"$partResult\n")
+//      })
 
     result
+
+//    validate(webIdFile.toJava, File("").toJava).getOrElse("")
   }
 
   def validate(webIdFile: JavaFile, shapesFile: JavaFile): Option[String] = {
 
-    val shapesGraph = RDFDataMgr.loadGraph(shapesFile.getPath)
-    val dataGraph = RDFDataMgr.loadGraph(webIdFile.getPath)
+    val shapesGraph = RDFDataMgr.loadGraph(shapesFile.getAbsolutePath)
+    val dataGraph = RDFDataMgr.loadGraph(webIdFile.getAbsolutePath)
     val shapes = Shapes.parse(shapesGraph)
     val report = ShaclValidator.get.validate(shapes, dataGraph)
 
