@@ -10,6 +10,8 @@ import scala.beans.BeanProperty
 case class Config() {
   @BeanProperty
   var virtuoso: VosConfig = new VosConfig
+  @BeanProperty
+  var exhibit: ExhibitConfig = new ExhibitConfig
 }
 
 case class VosConfig() {
@@ -21,4 +23,9 @@ case class VosConfig() {
   var psw: String = _
   @BeanProperty
   var graph: String = _
+}
+
+case class ExhibitConfig(){
+  @BeanProperty
+  var file:String =_
 }

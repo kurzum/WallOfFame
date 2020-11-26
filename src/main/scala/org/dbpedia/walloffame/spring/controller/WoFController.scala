@@ -1,5 +1,6 @@
 package org.dbpedia.walloffame.spring.controller
 
+import better.files.File
 import org.dbpedia.walloffame.Config
 import org.dbpedia.walloffame.convert.ModelToJSONConverter
 import org.dbpedia.walloffame.virtuoso.VirtuosoHandler
@@ -17,7 +18,7 @@ class WoFController {
 
   @RequestMapping(value = Array("/walloffame"), method = Array(GET))
   def getIndexPage(): String = {
-    ModelToJSONConverter.toJSON(VirtuosoHandler.getModel(config.virtuoso))
+    ModelToJSONConverter.toJSON(VirtuosoHandler.getModel(config.virtuoso), File(config.exhibit.file))
     "redirect:static/exhibit/walloffame.html"
   }
 

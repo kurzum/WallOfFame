@@ -1,5 +1,7 @@
 package org.dbpedia.walloffame
 
+import better.files.File
+import org.dbpedia.walloffame.convert.ModelToJSONConverter
 import org.dbpedia.walloffame.crawling.WebIdCrawler
 import org.dbpedia.walloffame.uniform.WebIdUniformer
 import org.dbpedia.walloffame.virtuoso.VirtuosoHandler
@@ -18,5 +20,6 @@ class InitRunner extends CommandLineRunner {
     val uniformedModel = WebIdUniformer.uniformWebIds(dir)
     dir.parent.delete()
     VirtuosoHandler.insertModel(uniformedModel,config.virtuoso)
+    ModelToJSONConverter.toJSON(uniformedModel, File(config.exhibit.file))
   }
 }

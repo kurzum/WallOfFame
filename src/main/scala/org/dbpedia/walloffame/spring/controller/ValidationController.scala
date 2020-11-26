@@ -1,6 +1,11 @@
 package org.dbpedia.walloffame.spring.controller
 
+import java.io
+import java.io.FileInputStream
+
 import better.files.File
+import javax.servlet.http.HttpServletResponse
+import org.apache.commons.io.IOUtils
 import org.apache.jena.riot.RiotException
 import org.dbpedia.walloffame.Config
 import org.dbpedia.walloffame.convert.ModelToJSONConverter
@@ -13,15 +18,23 @@ import org.springframework.web.bind.annotation.{GetMapping, PostMapping, Request
 import org.springframework.web.servlet.ModelAndView
 
 @Controller
-class ValidationController() {
-
-  @Autowired
-  private var config: Config = _
+class ValidationController(config: Config) {
 
   //value = Array("url") is the url the resulting site will be located at
   @GetMapping(value = Array("/", "/validate"))
   //viewname is the path to the related jsp file
   def getValidate(): String = "webid/validate"
+
+  @GetMapping(value = Array("/webids.js"),produces = Array("application/json"))
+  def getJson(response: HttpServletResponse): Unit = {
+    try {
+
+      IOUtils.copy(new FileInputStream(new io.File(config.exhibit.file)),response.getOutputStream)
+      response.setStatus(200)
+    } catch {
+      case e: Exception => response.setStatus(500)
+    }
+  }
 
   @PostMapping(value = Array("/", "validate"))
   def sendWebIdToValidate(@RequestParam("webid") webid: String) = {
@@ -58,7 +71,7 @@ class ValidationController() {
         }
 
         fileToValidate.delete()
-        val webids = ModelToJSONConverter.toJSON(VirtuosoHandler.getModel(config.virtuoso))
+        val webids = ModelToJSONConverter.toJSON(VirtuosoHandler.getModel(config.virtuoso), File(config.exhibit.file))
 //        val webids = ModelToJSONConverter.toJSON(model)
         new ModelAndView("redirect:static/exhibit/walloffame.html", "webids" , webids)
 

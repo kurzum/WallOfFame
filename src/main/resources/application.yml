@@ -5,3 +5,5 @@ virtuoso:
   usr: "dba"
   psw: "dba"
   graph: "http://webids"
+exhibit:
+  file: "./webids.js"

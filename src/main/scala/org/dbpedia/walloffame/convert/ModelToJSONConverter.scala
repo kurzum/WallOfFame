@@ -2,14 +2,18 @@ package org.dbpedia.walloffame.convert
 
 import better.files.File
 import org.apache.jena.rdf.model.Model
+import org.dbpedia.walloffame.Config
 import org.dbpedia.walloffame.uniform.QueryHandler
 import org.dbpedia.walloffame.uniform.queries.SelectQueries
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Component
 
 import scala.collection.mutable.ListBuffer
 
 object ModelToJSONConverter {
 
-  def toJSON(model: Model): File = {
+
+  def toJSON(model: Model, outFile:File): File = {
     //
     //    val stms = model.listStatements()
     //    while (stms.hasNext) println(stms.nextStatement())
@@ -78,7 +82,6 @@ object ModelToJSONConverter {
     try{
 
     }
-    val outFile = File("./src/main/webapp/static/exhibit/webids.js")
 
     new PrintWriter(outFile.toJava) {
       write(outJSON.prettyPrint)
