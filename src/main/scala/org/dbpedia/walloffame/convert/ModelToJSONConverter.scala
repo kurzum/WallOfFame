@@ -1,22 +1,40 @@
 package org.dbpedia.walloffame.convert
 
+import java.io.FileWriter
+import java.nio.file.{Files, Paths}
+
 import better.files.File
+import better.files.File.OpenOptions
 import org.apache.jena.rdf.model.Model
-import org.dbpedia.walloffame.Config
 import org.dbpedia.walloffame.uniform.QueryHandler
 import org.dbpedia.walloffame.uniform.queries.SelectQueries
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Component
-
 import scala.collection.mutable.ListBuffer
 
 object ModelToJSONConverter {
 
 
-  def toJSON(model: Model, outFile:File): File = {
-    //
-    //    val stms = model.listStatements()
-    //    while (stms.hasNext) println(stms.nextStatement())
+  def createJSONFile(model: Model, outFile:File):File={
+    val json = toJSON(model)
+
+    val bw = outFile.newBufferedWriter
+    bw.write(json)
+    bw.close()
+
+    outFile
+  }
+
+//  def appendToJSONFile(model: Model, jsonFile:File):File={
+//    val json = toJSON(model)
+//
+//    val bw = jsonFile.newBufferedWriter(openOptions = OpenOptions.append)
+//    bw.write(json)
+//    bw.close()
+//
+//    jsonFile
+//  }
+
+
+  def toJSON(model: Model): String = {
 
     val results = QueryHandler.executeQuery(SelectQueries.getQueryWebIdData(), model)
 
@@ -72,22 +90,6 @@ object ModelToJSONConverter {
     rawJSON = rawJSON.dropRight(1).concat("]}")
 
     import spray.json._
-    val outJSON = rawJSON.parseJson
-
-//    import org.springframework.core.io.support.PathMatchingResourcePatternResolver
-//    val resolver = new PathMatchingResourcePatternResolver
-//    val resources = resolver.getResources("classpath:shacl/*.ttl")
-
-    import java.io.PrintWriter
-    try{
-
-    }
-
-    new PrintWriter(outFile.toJava) {
-      write(outJSON.prettyPrint)
-      close
-    }
-
-    outFile
+    rawJSON.parseJson.prettyPrint
   }
 }

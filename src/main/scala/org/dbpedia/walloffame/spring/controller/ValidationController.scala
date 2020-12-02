@@ -42,7 +42,7 @@ class ValidationController(config: Config) {
     println(webid)
 
     import java.io.PrintWriter
-    val fileToValidate = File("webIdToValidate.ttl")
+    val fileToValidate = File("./tmp/webIdToValidate.ttl")
     new PrintWriter(fileToValidate.toJava) {
       write(webid)
       close
@@ -56,23 +56,24 @@ class ValidationController(config: Config) {
       if (result == "") {
         //valid webid
 
-        val model = WebIdUniformer.uniform(fileToValidate)
-
-        var wait = true
-        while (wait) {
-          try {
-            VirtuosoHandler.insertModel(model,config.virtuoso)
-            wait = false
-          } catch {
-            case e: Exception =>
-              println("waiting for vos to start up")
-              Thread.sleep(1000)
-          }
-        }
-
-        fileToValidate.delete()
-        val webids = ModelToJSONConverter.toJSON(VirtuosoHandler.getModel(config.virtuoso), File(config.exhibit.file))
-//        val webids = ModelToJSONConverter.toJSON(model)
+//        val model = WebIdUniformer.uniform(fileToValidate)
+//
+//        var wait = true
+//        while (wait) {
+//          try {
+//            VirtuosoHandler.insertModel(model,config.virtuoso)
+//            wait = false
+//          } catch {
+//            case e: Exception =>
+//              println("waiting for vos to start up")
+//              Thread.sleep(1000)
+//          }
+//        }
+//
+//        fileToValidate.delete()
+//        val webids = ModelToJSONConverter.appendToJSONFile(VirtuosoHandler.getModel(config.virtuoso), File(config.exhibit.file))
+////        val webids = ModelToJSONConverter.toJSON(model)
+        val webids =""
         new ModelAndView("redirect:static/exhibit/walloffame.html", "webids" , webids)
 
       }

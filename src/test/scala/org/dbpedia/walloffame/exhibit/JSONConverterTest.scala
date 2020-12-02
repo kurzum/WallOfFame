@@ -8,11 +8,13 @@ class JSONConverterTest() {
   @Test
   def convert(): Unit = {
     val model = RDFDataMgr.loadModel("./src/test/resources/correctWebId.ttl")
+    val json = File("./webid.js")
+    //    val out = new ByteArrayOutputStream()
+    //    RDFDataMgr.write(out, model, Lang.JSONLD)
+    //    println( out.toString)
+    ModelToJSONConverter.createJSONFile(model, json)
 
-//    val out = new ByteArrayOutputStream()
-//    RDFDataMgr.write(out, model, Lang.JSONLD)
-//    println( out.toString)
-    ModelToJSONConverter.toJSON(model, File("./webid.js"))
+    json.delete()
   }
 }
 
