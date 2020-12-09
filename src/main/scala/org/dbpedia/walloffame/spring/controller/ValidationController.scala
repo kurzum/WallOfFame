@@ -21,20 +21,9 @@ import org.springframework.web.servlet.ModelAndView
 class ValidationController(config: Config) {
 
   //value = Array("url") is the url the resulting site will be located at
-  @GetMapping(value = Array("/", "/validate"))
   //viewname is the path to the related jsp file
-  def getValidate(): String = "webid/validate"
-
-  @GetMapping(value = Array("/webids.js"),produces = Array("application/json"))
-  def getJson(response: HttpServletResponse): Unit = {
-    try {
-
-      IOUtils.copy(new FileInputStream(new io.File(config.exhibit.file)),response.getOutputStream)
-      response.setStatus(200)
-    } catch {
-      case e: Exception => response.setStatus(500)
-    }
-  }
+  @GetMapping(value = Array("/", "/validate"))
+  def getValidate(): String = "validate"
 
   @PostMapping(value = Array("/", "validate"))
   def sendWebIdToValidate(@RequestParam("webid") webid: String) = {
@@ -80,17 +69,28 @@ class ValidationController(config: Config) {
       else {
 
         fileToValidate.delete()
-        new ModelAndView("webid/result", "result", result)
+        new ModelAndView("result", "result", result)
 
       }
     } catch {
       case riot: RiotException => {
         result = riot.toString
         fileToValidate.delete()
-        new ModelAndView("webid/result", "result", result)
+        new ModelAndView("result", "result", result)
       }
     }
 
+  }
+
+  @GetMapping(value = Array("/webids.js"),produces = Array("application/json"))
+  def getJson(response: HttpServletResponse): Unit = {
+    try {
+
+      IOUtils.copy(new FileInputStream(new io.File(config.exhibit.file)),response.getOutputStream)
+      response.setStatus(200)
+    } catch {
+      case e: Exception => response.setStatus(500)
+    }
   }
 
 }

@@ -9,4 +9,9 @@ class crawltest {
   def shouldPrintOutCorrectOutput {
     println(WebIdCrawler.crawl())
   }
+
+  @Test
+  def shouldCrawl: Unit ={
+    WebIdCrawler.crawl()
+  }
 }

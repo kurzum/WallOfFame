@@ -10,6 +10,24 @@ rm -r -f "$FOLDER"
 mkdir "$FOLDER"
 mkdir "$FOLDER/webids"
 
+#download and unpack raptor
+curl http://download.librdf.org/source/raptor2-2.0.15.tar.gz | tar -xvzf -
+
+#get dependencies
+apt install libtool
+apt install autoconf
+apt install automake 
+apt install gtk-doc-tools
+apt install flex
+apt install bison
+
+#install rapper
+cd raptor2-2.0.15
+./autogen.sh
+./configure
+make
+make install
+
 rapper -i turtle -o ntriples https://databus.dbpedia.org/system/api/accounts \
     | cut -f3,1 -d " " \
     | tr -d \> \

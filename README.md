@@ -8,16 +8,16 @@ Prerequisites:
 Building and Running
 --------------------
 
-The webapp can be run inside Tomcat using :
+Run webapp using :
 
     ./execute.sh
       
-Now you can either browse through the application, starting at:
-    
+Per default the webapp is accessible at port 8080.
+You can start browsing at:
+
     localhost:8080/         ,or
     localhost:8080/validate
 
 Crawl and uniform all registered WebIds with:
     
     curl localhost:8080/getWebIds > webids.ttl
-    

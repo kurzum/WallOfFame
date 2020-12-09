@@ -1,6 +1,4 @@
 #!/bin/bash
 
-mvn package
-cp target/wof.war docker/wof/wof.war
-
-docker-compose -f docker/docker-compose.yml up
+sudo env "PATH=$PATH" mvn spring-boot:build-image
+cd docker && sudo docker-compose up
