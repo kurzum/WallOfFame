@@ -1,21 +1,18 @@
 package org.dbpedia.walloffame.spring.controller
 
-import java.io
-import java.io.FileInputStream
 import better.files.File
-
-import javax.servlet.http.HttpServletResponse
 import org.apache.commons.io.IOUtils
 import org.apache.jena.riot.RiotException
 import org.dbpedia.walloffame.Config
-import org.dbpedia.walloffame.convert.ModelToJSONConverter
 import org.dbpedia.walloffame.spring.model.WebId
-import org.dbpedia.walloffame.uniform.WebIdUniformer
 import org.dbpedia.walloffame.validation.WebIdValidator
-import org.dbpedia.walloffame.virtuoso.VirtuosoHandler
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.{GetMapping, ModelAttribute, PostMapping, RequestMapping, RequestMethod, RequestParam}
+import org.springframework.web.bind.annotation.{GetMapping, ModelAttribute, PostMapping}
 import org.springframework.web.servlet.ModelAndView
+
+import java.io
+import java.io.FileInputStream
+import javax.servlet.http.HttpServletResponse
 
 @Controller
 class ValidationController(config: Config) {
@@ -23,7 +20,7 @@ class ValidationController(config: Config) {
   //value = Array("url") is the url the resulting site will be located at
   //viewname is the path to the related jsp file
   @GetMapping(value = Array("/", "/validate"))
-  def getValidate(modelAndView:ModelAndView): ModelAndView = {
+  def getValidate(modelAndView: ModelAndView): ModelAndView = {
     val webid = new WebId
 
     webid.setValue(
@@ -58,7 +55,7 @@ class ValidationController(config: Config) {
   }
 
   @PostMapping(value = Array("/", "validate"))
-  def sendWebIdToValidate(@ModelAttribute("webid") newWebId:WebId): ModelAndView ={
+  def sendWebIdToValidate(@ModelAttribute("webid") newWebId: WebId): ModelAndView = {
 
     val webid = newWebId.getValue()
     println(webid)
@@ -78,23 +75,23 @@ class ValidationController(config: Config) {
       if (result == "") {
         //valid webid
 
-//        val model = WebIdUniformer.uniform(fileToValidate)
-//
-//        var wait = true
-//        while (wait) {
-//          try {
-//            VirtuosoHandler.insertModel(model,config.virtuoso)
-//            wait = false
-//          } catch {
-//            case e: Exception =>
-//              println("waiting for vos to start up")
-//              Thread.sleep(1000)
-//          }
-//        }
-//
-//        fileToValidate.delete()
-//        val webids = ModelToJSONConverter.appendToJSONFile(VirtuosoHandler.getModel(config.virtuoso), File(config.exhibit.file))
-////        val webids = ModelToJSONConverter.toJSON(model)
+        //        val model = WebIdUniformer.uniform(fileToValidate)
+        //
+        //        var wait = true
+        //        while (wait) {
+        //          try {
+        //            VirtuosoHandler.insertModel(model,config.virtuoso)
+        //            wait = false
+        //          } catch {
+        //            case e: Exception =>
+        //              println("waiting for vos to start up")
+        //              Thread.sleep(1000)
+        //          }
+        //        }
+        //
+        //        fileToValidate.delete()
+        //        val webids = ModelToJSONConverter.appendToJSONFile(VirtuosoHandler.getModel(config.virtuoso), File(config.exhibit.file))
+        ////        val webids = ModelToJSONConverter.toJSON(model)
         new ModelAndView("validate")
 
       }
@@ -114,11 +111,11 @@ class ValidationController(config: Config) {
 
   }
 
-  @GetMapping(value = Array("/webids.js"),produces = Array("application/json"))
+  @GetMapping(value = Array("/webids.js"), produces = Array("application/json"))
   def getJson(response: HttpServletResponse): Unit = {
     try {
 
-      IOUtils.copy(new FileInputStream(new io.File(config.exhibit.file)),response.getOutputStream)
+      IOUtils.copy(new FileInputStream(new io.File(config.exhibit.file)), response.getOutputStream)
       response.setStatus(200)
     } catch {
       case e: Exception => response.setStatus(500)
