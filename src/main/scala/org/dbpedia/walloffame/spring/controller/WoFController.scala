@@ -19,7 +19,7 @@ class WoFController {
   @RequestMapping(value = Array("/walloffame"), method = Array(GET))
   def getIndexPage(): String = {
     ModelToJSONConverter.createJSONFile(VirtuosoHandler.getModelOfAllWebids(config.virtuoso), File(config.exhibit.file))
-    "redirect:static/exhibit/walloffame.html"
+    "walloffame"
   }
 
 }

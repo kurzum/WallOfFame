@@ -12,7 +12,7 @@ object WebIdCrawler {
   var accounts = Seq.empty[Seq[String]]
 
   def crawl():File ={
-    val crawlDir = File("./tmp/crawl/")
+    val crawlDir = File("./tmp/webids/")
     crawlDir.createDirectoryIfNotExists()
 
     val url = "https://databus.dbpedia.org/system/api/accounts"

@@ -1,12 +1,36 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<title>Validation Form</title>
+<head>
+    <title>Validation Form</title>
+    <link rel='stylesheet' type='text/css' th:href="@{css/validateStyles.css}"/>
+</head>
 
-<body id="validate">
+
+<body>
+
+
+<div class="container">
+    You can either paste your plain WebId or the URL to your WebId here.
+
+    <form th:action="@{/validate}" th:object="${webid}" method="post">
+        <textarea id="webid" rows="30" cols="70" th:field="*{value}"></textarea>
+        <br/>
+        <button type="submit">Validate</button>
+    </form>
+</div>
+
+
+<div style="text-align: center">
+    <textarea id="asd" rows="30" cols="70" th:text="${result}" ></textarea>
+</div>
 
 <br>
 
-<input type="button" onclick="location.href='/static/exhibit/walloffame.html'" value="Wall of Fame">
+<input type="button" onclick="location.href='/walloffame'" value="Wall of Fame">
 <input type="button" onclick="location.href='/'" value="Back">
+
+<td><img th:src="@{images/DBpediaLogo.svg}"/></td>
+<br>
+
 </body>
 </html>
