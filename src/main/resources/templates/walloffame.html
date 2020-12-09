@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>DBpedia's Wall of Fame</title>
     <meta content="text/html;charset=UTF-8" http-equiv="content-type"/>
@@ -10,7 +10,7 @@
     <link href="http://api.simile-widgets.org/exhibit/current/extensions/time/time-extension.js" rel="exhibit-extension"
           type="text/javascript"/>
 
-    <link href='styles.css' rel='stylesheet' type='text/css'/>
+    <link rel='stylesheet' th:href="@{css/styles.css}" type='text/css'/>
 </head>
 <body>
 <ul id="path">
@@ -19,7 +19,7 @@
 </ul>
 <table id="header">
     <tr style="vertical-align:middle">
-        <td><img alt="DBpedia" src="DBpediaLogo.svg" style="float: left; margin-right: 2em;"/></td>
+        <td><img th:src="@{images/DBpediaLogo.svg}"/></td>
         <td>
             <p>
                 Welcome to DBpedia's Wall of Fame. Here you can have a look at all Users registered on the DBpedia

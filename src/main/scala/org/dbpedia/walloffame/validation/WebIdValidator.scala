@@ -1,11 +1,10 @@
 package org.dbpedia.walloffame.validation
 
-import java.io.{BufferedOutputStream, BufferedReader, ByteArrayOutputStream, FileOutputStream, FilenameFilter, InputStreamReader, File => JavaFile}
-
 import better.files.File
 import org.apache.jena.riot.{Lang, RDFDataMgr}
 import org.apache.jena.shacl.{ShaclValidator, Shapes}
-import org.springframework.core.io.ClassPathResource
+
+import java.io.{ByteArrayOutputStream, File => JavaFile}
 
 
 object WebIdValidator {
@@ -18,7 +17,7 @@ object WebIdValidator {
 
 
     var result = ""
-    val tmpShapeFile = File("./tmpShapeFile.ttl").toJava
+    val tmpShapeFile = File("./tmp/tmpShapeFile.ttl").toJava
     for (resource <- resources) {
       val is = resource.getInputStream
       val in = scala.io.Source.fromInputStream(is)
