@@ -7,6 +7,8 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix cert: <http://www.w3.org/ns/auth/cert#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/>
+@prefix dbo: <http://dbpedia.org/ontology/>
+
 
 <#WebIdShape>
     a sh:NodeShape ;
@@ -25,16 +27,26 @@
 <#PersonShape>
     a sh:NodeShape ;
     sh:targetClass foaf:Person ;
-    sh:property [                 
+    sh:property <#name-violation> ;
+    sh:property <#key-violation> ;
+    sh:property <#dbpedia-support-info> .
+
+<#name-violation>               
         sh:path foaf:name ;
-        sh:minCount 1;
-        sh:maxCount 1;
-    ] ;
-    sh:property [
+        sh:minCount 1 ;
+        sh:maxCount 1 .
+
+<#key-violation> 
         sh:path cert:key ;
-        sh:minCount 1;
-    ] .  
-    
+        sh:minCount 1 .
+
+<#dbpedia-support-info>  
+        sh:path rdf:type ;
+        sh:hasValue dbo:DBpedian ;
+        sh:severity sh:Info ;
+        sh:resultMessage "to be included in the WOF, we require that you show your support to DBpedia by addinga dbo:DBpedian to your URI." .
+
+
 ex:KeyShape
     a sh:NodeShape ;
     sh:targetClass cert:RSAPublicKey ;
