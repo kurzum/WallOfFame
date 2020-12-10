@@ -8,7 +8,7 @@
 @prefix cert: <http://www.w3.org/ns/auth/cert#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/>
 
-ex:WebIdShape
+<#WebIdShape>
     a sh:NodeShape ;
     sh:targetClass foaf:PersonalProfileDocument ;
     sh:property [                 
@@ -22,7 +22,7 @@ ex:WebIdShape
         sh:maxCount 1;
     ] .
     
-ex:PersonShape
+<#PersonShape>
     a sh:NodeShape ;
     sh:targetClass foaf:Person ;
     sh:property [                 
