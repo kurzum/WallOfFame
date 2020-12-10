@@ -19,33 +19,33 @@ class InitRunner extends CommandLineRunner {
   override def run(args: String*): Unit = {
     File("./tmp/").delete(true)
     File("./tmp/").createDirectory()
-//
-//    //crawl webids
-//    val dir = WebIdCrawler.crawl()
-//
-//    //delete all graphs from Session before!
-//    var wait = true
-//    while (wait) {
-//      try {
-//        VirtuosoHandler.getAllGraphs(config.virtuoso).foreach(graph=> VirtuosoHandler.clearGraph(config.virtuoso, graph))
-//        wait = false
-//      } catch {
-//        case e: Exception =>
-//          println("waiting for vos to start up")
-//          Thread.sleep(1000)
-//      }
-//    }
-//
-//    //insert all uniformed webids into virtuoso
-//    dir.children.foreach(webid =>{
-//      val uniformedModel = WebIdUniformer.uniform(webid)
-//      VirtuosoHandler.insertModel(uniformedModel,config.virtuoso, webid.nameWithoutExtension)
-//    })
-//
-//    //create json for exhibit
-//    ModelToJSONConverter.createJSONFile(
-//      VirtuosoHandler.getModelOfAllWebids(config.virtuoso),
-//      File(config.exhibit.file)
-//    )
+
+    //crawl webids
+    val dir = WebIdCrawler.crawl()
+
+    //delete all graphs from Session before!
+    var wait = true
+    while (wait) {
+      try {
+        VirtuosoHandler.getAllGraphs(config.virtuoso).foreach(graph=> VirtuosoHandler.clearGraph(config.virtuoso, graph))
+        wait = false
+      } catch {
+        case e: Exception =>
+          println("waiting for vos to start up")
+          Thread.sleep(1000)
+      }
+    }
+
+    //insert all uniformed webids into virtuoso
+    dir.children.foreach(webid =>{
+      val uniformedModel = WebIdUniformer.uniform(webid)
+      VirtuosoHandler.insertModel(uniformedModel,config.virtuoso, webid.nameWithoutExtension)
+    })
+
+    //create json for exhibit
+    ModelToJSONConverter.createJSONFile(
+      VirtuosoHandler.getModelOfAllWebids(config.virtuoso).get,
+      File(config.exhibit.file)
+    )
   }
 }
