@@ -5,7 +5,11 @@ import java.io.{ByteArrayOutputStream, InputStream, InputStreamReader}
 import org.apache.jena.rdf.model.Model
 import org.apache.jena.riot.{Lang, RDFDataMgr}
 import org.apache.jena.util.FileManager
+import org.dbpedia.walloffame.VosConfig
+import org.dbpedia.walloffame.virtuoso.VirtuosoHandler
 import org.junit.jupiter.api.Test
+import org.slf4j.LoggerFactory
+import virtuoso.jdbc4.VirtuosoException
 import virtuoso.jena.driver.{VirtGraph, VirtModel, VirtuosoQueryExecution, VirtuosoQueryExecutionFactory, VirtuosoUpdateFactory}
 
 
@@ -141,4 +145,70 @@ class VirtuosoHandler {
       System.out.println(s)
     }
   }
+
+  @Test
+  def shouldCatchException()={
+    try{
+
+      val virt = new VirtGraph("jdbc:virtuoso://localhost:1111", "dba", "dba")
+    } catch {
+      case virtuosoException: VirtuosoException => "hallo"
+    }
+
+  }
+
+  @Test
+  def shouldCatch()={
+    getAllGraphs()
+  }
+
+
+  def getAllGraphs():Seq[String] ={
+
+
+    import org.apache.jena.query.{Query, QueryFactory}
+
+    val virt =
+      try{
+        val newVirt = new VirtGraph("jdbc:virtuoso://localhost:1111", "dba", "dba")
+        Option(newVirt)
+      } catch {
+        case virtuosoException: VirtuosoException => {
+          println("haloo")
+          LoggerFactory.getLogger("Virtuoso").error("Connection refused")
+          None
+        }
+      }
+
+    if (virt == None) Seq.empty[String]
+    else {
+      val sparql: Query = QueryFactory.create(
+        s"""
+           |SELECT  DISTINCT ?g
+           |WHERE  {
+           |   GRAPH ?g {?s ?p ?o}
+           |   FILTER regex(?g, "^asd")
+           |}
+           |ORDER BY  ?g
+      """.stripMargin)
+
+      val vqe: VirtuosoQueryExecution = VirtuosoQueryExecutionFactory.create(sparql, virt.get)
+
+      val results = vqe.execSelect
+
+      var graphs = Seq.empty[String]
+
+      while (results.hasNext) {
+        val rs = results.nextSolution
+        val s = rs.get("g")
+        graphs=graphs:+s.toString
+      }
+
+      graphs
+    }
+
+
+
+  }
+
 }

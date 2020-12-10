@@ -9,10 +9,13 @@ import org.dbpedia.walloffame.validation.WebIdValidator
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.{GetMapping, ModelAttribute, PostMapping}
 import org.springframework.web.servlet.ModelAndView
-
 import java.io
 import java.io.FileInputStream
+
 import javax.servlet.http.HttpServletResponse
+import org.dbpedia.walloffame.convert.ModelToJSONConverter
+import org.dbpedia.walloffame.uniform.WebIdUniformer
+import org.dbpedia.walloffame.virtuoso.VirtuosoHandler
 
 @Controller
 class ValidationController(config: Config) {
@@ -22,8 +25,7 @@ class ValidationController(config: Config) {
   @GetMapping(value = Array("/", "/validate"))
   def getValidate(modelAndView: ModelAndView): ModelAndView = {
     val webid = new WebId
-
-    webid.setValue(
+    webid.setTurtle(
       """
         |@prefix foaf: <http://xmlns.com/foaf/0.1/> .
         |@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -36,7 +38,7 @@ class ValidationController(config: Config) {
         |
         |<#this> a foaf:Person ;
         |   foaf:name "Eisenbahnplatte";
-        |   foaf:img "https://eisenbahnplatte.github.io/eisenbahnplatte.jpeg";
+        |   foaf:img <https://eisenbahnplatte.github.io/eisenbahnplatte.jpeg>;
         |   foaf:gender "male";
         |   foaf:geekcode "GMU GCS s: d? !a L++ PS+++ PE- G h";
         |   foaf:firstname "Fabian";
@@ -57,13 +59,13 @@ class ValidationController(config: Config) {
   @PostMapping(value = Array("/", "validate"))
   def sendWebIdToValidate(@ModelAttribute("webid") newWebId: WebId): ModelAndView = {
 
-    val webid = newWebId.getValue()
-    println(webid)
+    val turtle = newWebId.turtle
+    println(turtle)
 
     import java.io.PrintWriter
     val fileToValidate = File("./tmp/webIdToValidate.ttl")
     new PrintWriter(fileToValidate.toJava) {
-      write(webid)
+      write(turtle)
       close
     }
 
@@ -75,25 +77,26 @@ class ValidationController(config: Config) {
       if (result == "") {
         //valid webid
 
-        //        val model = WebIdUniformer.uniform(fileToValidate)
-        //
-        //        var wait = true
-        //        while (wait) {
-        //          try {
-        //            VirtuosoHandler.insertModel(model,config.virtuoso)
-        //            wait = false
-        //          } catch {
-        //            case e: Exception =>
-        //              println("waiting for vos to start up")
-        //              Thread.sleep(1000)
-        //          }
-        //        }
-        //
-        //        fileToValidate.delete()
-        //        val webids = ModelToJSONConverter.appendToJSONFile(VirtuosoHandler.getModel(config.virtuoso), File(config.exhibit.file))
-        ////        val webids = ModelToJSONConverter.toJSON(model)
-        new ModelAndView("validate")
+        val model = WebIdUniformer.uniform(fileToValidate)
 
+        newWebId.insertFieldsFromTurtle(model)
+//        var wait = true
+//        while (wait) {
+//          try {
+//            VirtuosoHandler.insertModel(model,config.virtuoso)
+//            wait = false
+//          } catch {
+//            case e: Exception =>
+//              println("waiting for vos to start up")
+//              Thread.sleep(1000)
+//          }
+//        }
+//
+//        fileToValidate.delete()
+//        val webids = ModelToJSONConverter.appendToJSONFile(VirtuosoHandler.getModel(config.virtuoso), File(config.exhibit.file))
+        //        val webids = ModelToJSONConverter.toJSON(model)
+        val modelView = new ModelAndView("validate", "result", "Your WebId is correct.")
+        modelView.addObject("webid", newWebId)
       }
       else {
 

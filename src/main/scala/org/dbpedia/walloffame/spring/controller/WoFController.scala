@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod.GET
+import virtuoso.jdbc4.VirtuosoException
 
 
 @Controller
@@ -18,7 +19,14 @@ class WoFController {
 
   @RequestMapping(value = Array("/walloffame"), method = Array(GET))
   def getIndexPage(): String = {
-    ModelToJSONConverter.createJSONFile(VirtuosoHandler.getModelOfAllWebids(config.virtuoso), File(config.exhibit.file))
+    val optModel =
+    try{
+      VirtuosoHandler.getModelOfAllWebids(config.virtuoso)
+    } catch {
+      case virtuosoException: VirtuosoException => None
+    }
+
+    if (!(optModel ==None)) ModelToJSONConverter.createJSONFile(optModel.get, File(config.exhibit.file))
     "walloffame"
   }
 

@@ -6,6 +6,8 @@ import better.files.File
 import org.apache.jena.rdf.model.{Model, ModelFactory}
 import org.apache.jena.util.FileManager
 import org.dbpedia.walloffame.VosConfig
+import org.slf4j.LoggerFactory
+import virtuoso.jdbc4.VirtuosoException
 import virtuoso.jena.driver.{VirtGraph, VirtModel, VirtuosoQueryExecution, VirtuosoQueryExecutionFactory}
 
 object VirtuosoHandler {
@@ -41,41 +43,66 @@ object VirtuosoHandler {
   }
 
   def getAllGraphs(vosConfig: VosConfig):Seq[String] ={
-    import org.apache.jena.query.{Query, QueryFactory}
 
-    val virt = new VirtGraph("jdbc:virtuoso://localhost:1111", "dba", "dba")
 
-    val sparql: Query = QueryFactory.create(
-      s"""
-        |SELECT  DISTINCT ?g
-        |WHERE  {
-        |   GRAPH ?g {?s ?p ?o}
-        |   FILTER regex(?g, "^${vosConfig.graph}")
-        |}
-        |ORDER BY  ?g
-      """.stripMargin)
+      import org.apache.jena.query.{Query, QueryFactory}
 
-    val vqe: VirtuosoQueryExecution = VirtuosoQueryExecutionFactory.create(sparql, virt)
-
-    val results = vqe.execSelect
-
-    var graphs = Seq.empty[String]
-
-    while (results.hasNext) {
-      val rs = results.nextSolution
-      val s = rs.get("g")
-      graphs=graphs:+s.toString
+    val virt =
+      try{
+       val newVirt = new VirtGraph("jdbc:virtuoso://localhost:1111", "dba", "dba")
+        Option(newVirt)
+      } catch {
+        case virtuosoException: VirtuosoException => {
+        println("haloo")
+        LoggerFactory.getLogger("Virtuoso").error("Connection refused")
+        None
+      }
     }
 
-    graphs
+    if (virt == None) Seq.empty[String]
+    else {
+      val sparql: Query = QueryFactory.create(
+        s"""
+           |SELECT  DISTINCT ?g
+           |WHERE  {
+           |   GRAPH ?g {?s ?p ?o}
+           |   FILTER regex(?g, "^${vosConfig.graph}")
+           |}
+           |ORDER BY  ?g
+      """.stripMargin)
+
+      val vqe: VirtuosoQueryExecution = VirtuosoQueryExecutionFactory.create(sparql, virt.get)
+
+      val results = vqe.execSelect
+
+      var graphs = Seq.empty[String]
+
+            while (results.hasNext) {
+              val rs = results.nextSolution
+              val s = rs.get("g")
+              graphs=graphs:+s.toString
+            }
+
+      graphs
+    }
+
+
+
   }
 
-  def getModelOfAllWebids(vosConfig: VosConfig):Model={
-    val model = ModelFactory.createDefaultModel()
-    VirtuosoHandler.getAllGraphs(vosConfig).foreach(graph =>
-      model.add(VirtuosoHandler.getModel(vosConfig, graph))
-    )
-    model
+  def getModelOfAllWebids(vosConfig: VosConfig):Option[Model]={
+    try{
+      val model = ModelFactory.createDefaultModel()
+      VirtuosoHandler.getAllGraphs(vosConfig).foreach(graph =>
+        model.add(VirtuosoHandler.getModel(vosConfig, graph))
+      )
+      Option(model)
+    } catch {
+      case virtuosoException: VirtuosoException => {
+        LoggerFactory.getLogger("Virtuoso").error("Connection to Virtuoso DB failed.")
+        None
+      }
+    }
   }
 
 }

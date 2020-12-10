@@ -5,9 +5,10 @@ import org.apache.jena.query._
 import org.apache.jena.rdf.model.{Model, ModelFactory, RDFNode}
 
 object QueryHandler {
-  def executeQuery(queryString: String, model: Model): Seq[QuerySolution] = {
 
-    JenaRuntime.isRDF11 = false
+  JenaRuntime.isRDF11 = false
+
+  def executeQuery(queryString: String, model: Model): Seq[QuerySolution] = {
 
     val query: Query = QueryFactory.create(queryString)
     val qexec: QueryExecution = QueryExecutionFactory.create(query, model)
@@ -28,8 +29,6 @@ object QueryHandler {
 
   def executeSingleResultQuery(queryString: String, model: Model): RDFNode = {
 
-    JenaRuntime.isRDF11 = false
-
     val query: Query = QueryFactory.create(queryString)
     val qexec: QueryExecution = QueryExecutionFactory.create(query, model)
 
@@ -41,8 +40,6 @@ object QueryHandler {
   }
 
   def executeConstructQuery(queryString: String, model: Model, constructedModel: Model = ModelFactory.createDefaultModel()): Boolean = {
-
-    JenaRuntime.isRDF11 = false
 
     val query: Query = QueryFactory.create(queryString)
     val qexec: QueryExecution = QueryExecutionFactory.create(query, model)

@@ -2,35 +2,73 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Validation Form</title>
+    <link rel='stylesheet' type='text/css' th:href="@{css/bootstrap.min.css}"/>
     <link rel='stylesheet' type='text/css' th:href="@{css/validateStyles.css}"/>
+    <script th:src="@{js/bootstrap.min.js}"></script>
 </head>
 
 
 <body>
 
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <img th:src="@{images/DBpediaLogo.svg}"/>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto">
 
-<div class="container">
-    You can either paste your plain WebId or the URL to your WebId here.
+                    <li class="nav-item">
+                        <a class="nav-link" href="/walloffame">Wall of Fame</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/validate">WebId Validator</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">About</a>
+                    </li>
 
-    <form th:action="@{/validate}" th:object="${webid}" method="post">
-        <textarea id="webid" rows="30" cols="70" th:field="*{value}"></textarea>
-        <br/>
-        <button type="submit">Validate</button>
-    </form>
-</div>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-
-<div style="text-align: center">
-    <textarea id="asd" rows="30" cols="70" th:text="${result}" ></textarea>
-</div>
-
-<br>
-
-<input type="button" onclick="location.href='/walloffame'" value="Wall of Fame">
-<input type="button" onclick="location.href='/'" value="Back">
-
-<td><img th:src="@{images/DBpediaLogo.svg}"/></td>
-<br>
+    <div class="container-fluid">
+        <br>
+        <div class="row">
+            <div class="col-sm">
+                You can either paste your plain WebId or the URL to your WebId here.
+                <br/>
+                <form th:action="@{/validate}" th:object="${webid}" method="post">
+                    <textarea class="form-control" id="webid" th:field="*{turtle}"></textarea>
+                    <button type="submit" class="btn btn-primary">Validate</button>
+                </form>
+            </div>
+            <div class="col-sm">
+                Validation result:
+                <textarea class="form-control" id="asd" th:text="${result}" ></textarea>
+            </div>
+            <div class="col-sm">
+                Your Webid:
+                <div class="card" style="width: 24rem;">
+                    <img class="card-img-top" th:src="${webid.img}" alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title"><td th:text="${webid.name}"></td></h5>
+                        <p class="card-text">
+                            Name: <td th:text="${webid.firstName}"></td> <br>
+                        Gender: <td th:text="${webid.gender}"></td> <br>
+                        Geekcode: <td th:text="${webid.geekCode}"></td>
+                        </p>
+                        <a th:href="${webid.maker}" class="btn btn-primary">Go to WebId</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </body>
 </html>

@@ -39,6 +39,7 @@ object ConstructQueries {
   }
 
 
+
   def constructWebIdURL(): String = {
     """
       |PREFIX foaf: <http://xmlns.com/foaf/0.1/>
