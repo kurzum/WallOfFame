@@ -1,7 +1,12 @@
 package org.dbpedia.walloffame.shaclTest
 
+import better.files.File
+import org.apache.jena.riot.{Lang, RDFDataMgr}
+import org.apache.jena.shacl.lib.ShLib
+import org.apache.jena.shacl.{ShaclValidator, Shapes}
 import org.dbpedia.walloffame.uniform.QueryHandler
 import org.dbpedia.walloffame.validation.WebIdValidator
+import org.junit.jupiter.api.Test
 
 import java.io.ByteArrayOutputStream
 

@@ -1,7 +1,11 @@
 package org.dbpedia.walloffame.uniform
 
+import better.files.File
+import org.apache.jena.rdf.model.{Model, ModelFactory}
+import org.apache.jena.riot.RDFDataMgr
 import org.dbpedia.walloffame.uniform.queries.{ConstructOptionalQueries, ConstructQueries}
 import org.dbpedia.walloffame.validation.WebIdValidator
+import org.slf4j.{Logger, LoggerFactory}
 
 object WebIdUniformer {
 
@@ -64,23 +68,23 @@ object WebIdUniformer {
 
 
     if (!construct(ConstructOptionalQueries.constructFirstName())) {
-      logger.error(s"optional item(s) not found for ${webidFile.name}.")
+      logger.info(s"firstname not found for ${webidFile.name}.")
       return constructModel
     }
     if (!construct(ConstructOptionalQueries.constructGeekCode())) {
-      logger.error(s"mandatory item(s) not found for ${webidFile.name}.")
+      logger.info(s"geekcode not found for ${webidFile.name}.")
       return constructModel
     }
     if (!construct(ConstructOptionalQueries.constructGender())) {
-      logger.error(s"mandatory item(s) not found for ${webidFile.name}.")
+      logger.info(s"gender not found for ${webidFile.name}.")
       return constructModel
     }
     if (!construct(ConstructOptionalQueries.constructImg())) {
-      logger.error(s"mandatory item(s) not found for ${webidFile.name}.")
+      logger.info(s"image not found for ${webidFile.name}.")
       return constructModel
     }
     if (!construct(ConstructOptionalQueries.constructName())) {
-      logger.error(s"mandatory item(s) not found for ${webidFile.name}.")
+      logger.info(s"name not found for ${webidFile.name}.")
       return constructModel
     }
 

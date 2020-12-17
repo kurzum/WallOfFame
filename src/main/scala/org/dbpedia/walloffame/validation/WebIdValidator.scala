@@ -1,14 +1,18 @@
 package org.dbpedia.walloffame.validation
 
+import better.files.File
+import org.apache.jena.riot.{Lang, RDFDataMgr}
+import org.apache.jena.shacl.{ShaclValidator, Shapes}
 import org.dbpedia.walloffame.uniform.QueryHandler
 
-import java.io.ByteArrayOutputStream
-
+import java.io.{ByteArrayOutputStream, File => JavaFile}
 
 object WebIdValidator {
 
 
   def validateWithShacl(webIdFile: File): (Boolean, Seq[(Boolean, String)]) = {
+
+    import org.springframework.core.io.support.PathMatchingResourcePatternResolver
     val resolver = new PathMatchingResourcePatternResolver
     val resources = resolver.getResources("classpath:shacl/*.ttl")
 

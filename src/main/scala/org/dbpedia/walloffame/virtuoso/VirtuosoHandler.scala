@@ -1,6 +1,11 @@
 package org.dbpedia.walloffame.virtuoso
 
+import better.files.File
+import org.apache.jena.query.{Query, QueryFactory}
+import org.apache.jena.rdf.model.{Model, ModelFactory}
+import org.apache.jena.util.FileManager
 import org.dbpedia.walloffame.VosConfig
+import org.slf4j.LoggerFactory
 import virtuoso.jdbc4.VirtuosoException
 import virtuoso.jena.driver.{VirtGraph, VirtModel, VirtuosoQueryExecution, VirtuosoQueryExecutionFactory}
 

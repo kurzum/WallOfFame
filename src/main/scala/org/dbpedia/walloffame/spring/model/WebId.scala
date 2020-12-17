@@ -73,9 +73,9 @@ class WebId {
 
   def insertFieldsFromTurtle(model:Model):Unit ={
 
-    val stmts = model.listStatements()
-    while(stmts.hasNext) println(stmts.nextStatement())
-    val mandatory = QueryHandler.executeQuery(SelectQueries.getQueryWebIdData(), model).head
+//    val stmts = model.listStatements()
+//    while(stmts.hasNext) println(stmts.nextStatement())
+val mandatory = QueryHandler.executeQuery(SelectQueries.getQueryWebIdData(), model).head
 
     setName(mandatory.getLiteral("?name").getLexicalForm)
     setMaker(mandatory.getResource("?maker").toString)
