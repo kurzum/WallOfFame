@@ -1,17 +1,50 @@
-<!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html>
+<html lang='en' xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <title>Validation Result</title>
+    <title>Archivo SHACL Visualisation</title>
+    <link rel="stylesheet" th:href="@{css/result.css}" type="text/css"/>
 </head>
 
 <body>
-<input type="button" onclick="location.href='/validate'" value="Validate WebId">
-<input type="button" onclick="location.href='/walloffame'" value="Wall of Fame">
-</br>
-</br>
 
-<b><u>Your WebId has the following error:</u></b> </br>
-<p th:text="${result}"></p>
+
+<div>
+    <button class="collapsible violations" type="button">Problem: No license found at all (neither dct:license,
+        xhv:license nor cc:license)
+        <br>
+        <small>Conflicting nodes:
+            1</small>
+    </button>
+
+    <div class="content">
+        <p>
+            <strong>Conflicting Nodes:</strong>
+        <ul>
+            <li>http://vocab.deri.ie/am</li>
+        </ul>
+        </p>
+    </div>
+</div>
+
 </body>
+
+<script>
+
+    var coll = document.getElementsByClassName("collapsible");
+    var i;
+
+    for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.display === "block") {
+                content.style.display = "none";
+            } else {
+                content.style.display = "block";
+            }
+        });
+    }
+</script>
+
 </html>

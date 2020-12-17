@@ -1,18 +1,14 @@
 package org.dbpedia.walloffame.virtuoso
 
-import java.io.{InputStream, InputStreamReader}
-
-import better.files.File
-import org.apache.jena.rdf.model.{Model, ModelFactory}
-import org.apache.jena.util.FileManager
 import org.dbpedia.walloffame.VosConfig
-import org.slf4j.LoggerFactory
 import virtuoso.jdbc4.VirtuosoException
 import virtuoso.jena.driver.{VirtGraph, VirtModel, VirtuosoQueryExecution, VirtuosoQueryExecutionFactory}
 
+import java.io.{InputStream, InputStreamReader}
+
 object VirtuosoHandler {
 
-  def insertFile(file: File,vosConfig: VosConfig, subGraph:String) = {
+  def insertFile(file: File, vosConfig: VosConfig, subGraph: String) = {
     try {
       val model: Model = VirtModel.openDatabaseModel(vosConfig.graph.concat(subGraph), vosConfig.url, vosConfig.usr, vosConfig.psw)
       val in: InputStream = FileManager.get().open(file.pathAsString)
@@ -44,12 +40,9 @@ object VirtuosoHandler {
 
   def getAllGraphs(vosConfig: VosConfig):Seq[String] ={
 
-
-      import org.apache.jena.query.{Query, QueryFactory}
-
     val virt =
       try{
-       val newVirt = new VirtGraph("jdbc:virtuoso://localhost:1111", "dba", "dba")
+        val newVirt = new VirtGraph(vosConfig.url, vosConfig.usr, vosConfig.psw)
         Option(newVirt)
       } catch {
         case virtuosoException: VirtuosoException => {

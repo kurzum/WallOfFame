@@ -1,21 +1,12 @@
 package org.dbpedia.walloffame.spring.controller
 
-import better.files.File
-import org.apache.commons.io.IOUtils
-import org.apache.jena.riot.RiotException
 import org.dbpedia.walloffame.Config
 import org.dbpedia.walloffame.spring.model.WebId
+import org.dbpedia.walloffame.uniform.WebIdUniformer
 import org.dbpedia.walloffame.validation.WebIdValidator
-import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.{GetMapping, ModelAttribute, PostMapping}
-import org.springframework.web.servlet.ModelAndView
+
 import java.io
 import java.io.FileInputStream
-
-import javax.servlet.http.HttpServletResponse
-import org.dbpedia.walloffame.convert.ModelToJSONConverter
-import org.dbpedia.walloffame.uniform.WebIdUniformer
-import org.dbpedia.walloffame.virtuoso.VirtuosoHandler
 
 @Controller
 class ValidationController(config: Config) {
@@ -52,6 +43,7 @@ class ValidationController(config: Config) {
         |""".stripMargin)
     modelAndView.addObject("webid", webid)
     modelAndView.addObject("result", "")
+    modelAndView.addObject("shortResult", "")
     modelAndView.setViewName("validate")
     modelAndView
   }
@@ -69,44 +61,43 @@ class ValidationController(config: Config) {
       close
     }
 
-    var result = ""
     try {
 
-      result = WebIdValidator.validateWithShacl(fileToValidate)
+      val result = WebIdValidator.validateWithShacl(fileToValidate)
 
-      if (result == "") {
+      if (result._1) {
         //valid webid
 
         val model = WebIdUniformer.uniform(fileToValidate)
 
         newWebId.insertFieldsFromTurtle(model)
-//        var wait = true
-//        while (wait) {
-//          try {
-//            VirtuosoHandler.insertModel(model,config.virtuoso)
-//            wait = false
-//          } catch {
-//            case e: Exception =>
-//              println("waiting for vos to start up")
-//              Thread.sleep(1000)
-//          }
-//        }
-//
-//        fileToValidate.delete()
-//        val webids = ModelToJSONConverter.appendToJSONFile(VirtuosoHandler.getModel(config.virtuoso), File(config.exhibit.file))
+        //        var wait = true
+        //        while (wait) {
+        //          try {
+        //            VirtuosoHandler.insertModel(model,config.virtuoso)
+        //            wait = false
+        //          } catch {
+        //            case e: Exception =>
+        //              println("waiting for vos to start up")
+        //              Thread.sleep(1000)
+        //          }
+        //        }
+        //
+        //        fileToValidate.delete()
+        //        val webids = ModelToJSONConverter.appendToJSONFile(VirtuosoHandler.getModel(config.virtuoso), File(config.exhibit.file))
         //        val webids = ModelToJSONConverter.toJSON(model)
-        val modelView = new ModelAndView("validate", "result", "Your WebId is correct.")
+        val modelView = new ModelAndView("validate", "result", result._2.toString())
         modelView.addObject("webid", newWebId)
       }
       else {
 
         fileToValidate.delete()
-        new ModelAndView("validate", "result", result)
+        new ModelAndView("validate", "result", result._2.toString())
 
       }
     } catch {
       case riot: RiotException => {
-        result = riot.toString
+        val result = riot.toString
         fileToValidate.delete()
         new ModelAndView("validate", "result", result)
       }

@@ -1,13 +1,9 @@
 package org.dbpedia.walloffame.shaclTest
 
-import java.io.ByteArrayOutputStream
-
-import better.files.File
-import org.apache.jena.riot.{Lang, RDFDataMgr}
-import org.apache.jena.shacl.lib.ShLib
-import org.apache.jena.shacl.{ShaclValidator, Shapes}
+import org.dbpedia.walloffame.uniform.QueryHandler
 import org.dbpedia.walloffame.validation.WebIdValidator
-import org.junit.jupiter.api.Test
+
+import java.io.ByteArrayOutputStream
 
 class ShaclTest {
 
@@ -17,7 +13,7 @@ class ShaclTest {
   @Test
   def shouldPrintOutCorrectOutput {
     val webIdFile = testResourceDir / "wrongWebId.ttl"
-    println(WebIdValidator.validate(webIdFile.toJava, shapeFile.toJava))
+    println(WebIdValidator.validate(webIdFile, shapeFile))
   }
 
   @Test
@@ -29,61 +25,61 @@ class ShaclTest {
   @Test
   def shaclShouldSuccess: Unit = {
     val webIdFile = testResourceDir / "correctWebId.ttl"
-    validate(webIdFile,shapeFile)
-  }
-
-  @Test
-  def shaclShouldFail: Unit = {
-    val webIdFile = testResourceDir/ "wrongWebId.ttl"
-    validate(webIdFile,shapeFile)
+    assert(validate(webIdFile, shapeFile))
   }
 
   def validate(webIdFile: File, shapesFile: File): Boolean = {
-
-    val stmts = RDFDataMgr.loadModel(shapesFile.pathAsString).listStatements()
-    while (stmts.hasNext) println(stmts.nextStatement())
-
 
     val shapesGraph = RDFDataMgr.loadGraph(shapesFile.pathAsString)
     val dataGraph = RDFDataMgr.loadGraph(webIdFile.pathAsString)
     val shapes = Shapes.parse(shapesGraph)
 
-    println("SHAPE is empty?")
-    println(shapes.isEmpty)
-    val it = shapes.iterator()
-    while (it.hasNext) println(it.next())
-
-
-    val report = ShaclValidator.get.validate(shapes,dataGraph)
-
-
-
-
-
-
+    val report = ShaclValidator.get.validate(shapes, dataGraph)
 
     println("REPORT")
     ShLib.printReport(report)
     System.out.println()
     val out = new ByteArrayOutputStream()
     RDFDataMgr.write(System.out, report.getModel, Lang.TTL)
-    out.toString
-    ShLib.printReport(report)
-    report.conforms()
+    println(out)
+
+    val reportModel = report.getModel
+
+    val query =
+      """
+        |PREFIX sh: <http://www.w3.org/ns/shacl#>
+        |
+        |SELECT (count(?error) as ?countErrors)
+        |WHERE {
+        |  ?report  a  sh:ValidationReport ;
+        |           sh:result ?result .
+        |  ?result  sh:resultSeverity sh:Violation ;
+        |           sh:resultSeverity ?error.
+        |}
+        |""".stripMargin
+    val result = QueryHandler.executeQuery(query, reportModel).head
+
+    println(result)
+    result.getLiteral("?countErrors").getInt.equals(0)
   }
 
-
   @Test
-  def correctFileShouldPass:Unit= {
-
-    val webIdFile = testResourceDir /"correctWebId.ttl"
-    println(WebIdValidator.validate(webIdFile.toJava,shapeFile.toJava))
-  }
-
-  @Test
-  def wrongFileShouldNotPass:Unit= {
+  def shaclShouldFail: Unit = {
     val webIdFile = testResourceDir / "wrongWebId.ttl"
-    println(WebIdValidator.validate(webIdFile.toJava,shapeFile.toJava))
+    assert(!validate(webIdFile, shapeFile))
+  }
+
+  @Test
+  def correctFileShouldPass: Unit = {
+
+    val webIdFile = testResourceDir / "correctWebId.ttl"
+    println(WebIdValidator.validate(webIdFile, shapeFile))
+  }
+
+  @Test
+  def wrongFileShouldNotPass: Unit = {
+    val webIdFile = testResourceDir / "wrongWebId.ttl"
+    println(WebIdValidator.validate(webIdFile, shapeFile))
   }
 
   @Test

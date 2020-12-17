@@ -1,11 +1,7 @@
 package org.dbpedia.walloffame.uniform
 
-import better.files.File
-import org.apache.jena.rdf.model.{Model, ModelFactory}
-import org.apache.jena.riot.RDFDataMgr
 import org.dbpedia.walloffame.uniform.queries.{ConstructOptionalQueries, ConstructQueries}
 import org.dbpedia.walloffame.validation.WebIdValidator
-import org.slf4j.{Logger, LoggerFactory}
 
 object WebIdUniformer {
 
@@ -18,7 +14,7 @@ object WebIdUniformer {
     if (dir.exists && dir.isDirectory) {
       dir.listRecursively().foreach(file => {
         println(file.pathAsString)
-        if (WebIdValidator.validateWithShacl(file).isEmpty) uniform(file, constructModel)
+        if (WebIdValidator.validateWithShacl(file)._1) uniform(file, constructModel)
       })
     }
 
@@ -68,7 +64,7 @@ object WebIdUniformer {
 
 
     if (!construct(ConstructOptionalQueries.constructFirstName())) {
-      logger.error(s"mandatory item(s) not found for ${webidFile.name}.")
+      logger.error(s"optional item(s) not found for ${webidFile.name}.")
       return constructModel
     }
     if (!construct(ConstructOptionalQueries.constructGeekCode())) {
