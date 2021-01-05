@@ -4,7 +4,9 @@ import better.files.File
 import org.apache.jena.riot.{Lang, RDFDataMgr}
 import org.apache.jena.shacl.lib.ShLib
 import org.apache.jena.shacl.{ShaclValidator, Shapes}
+import org.dbpedia.walloffame.spring.model.Result
 import org.dbpedia.walloffame.uniform.QueryHandler
+import org.dbpedia.walloffame.uniform.queries.SelectQueries
 import org.dbpedia.walloffame.validation.WebIdValidator
 import org.junit.jupiter.api.Test
 
@@ -24,7 +26,7 @@ class ShaclTest {
   @Test
   def shouldSuccess {
     val webIdFile = testResourceDir / "correctWebId.ttl"
-    println(WebIdValidator.validateWithShacl(webIdFile))
+    println(WebIdValidator.validate(webIdFile))
   }
 
   @Test
@@ -113,10 +115,52 @@ class ShaclTest {
 
 
   @Test
-  def shapeShouldNotBeEmpty:Unit ={
+  def shapeShouldNotBeEmpty: Unit = {
     val shapes = Shapes.parse("./src/test/resources/New Folder/shape.ttl")
 
+    val result = new Result
+    result.getResult
     assert(!shapes.isEmpty)
+  }
+
+  @Test
+  def shaclTest: Unit = {
+    val webIdFile = testResourceDir / "wrongWebId.ttl"
+    //    assert(!validate(webIdFile, shapeFile))
+
+
+    def validateNew(webIdFile: File, shapesFile: File): Result = {
+      val shapesGraph = RDFDataMgr.loadGraph(shapesFile.pathAsString)
+      val dataGraph = RDFDataMgr.loadGraph(webIdFile.pathAsString)
+      val shapes = Shapes.parse(shapesGraph)
+
+      val report = ShaclValidator.get.validate(shapes, dataGraph)
+      val result = new Result
+
+      //full result
+      val out = new ByteArrayOutputStream()
+      RDFDataMgr.write(out, report.getModel, Lang.TTL)
+      result.setResult(out.toString)
+      out.close()
+
+      //set infos and violations
+      QueryHandler.executeQuery(SelectQueries.resultSeverity, report.getModel).foreach(
+        solution => {
+          if (solution.getResource("severity").getURI == "http://www.w3.org/ns/shacl#Violation") {
+            result.addViolation(solution.getResource("focusNode").getURI, solution.getLiteral("message").getLexicalForm)
+          }
+          else if (solution.getResource("severity").getURI == "http://www.w3.org/ns/shacl#Info") {
+            result.addInfo(solution.getResource("focusNode").getURI, solution.getLiteral("message").getLexicalForm)
+          }
+        }
+      )
+
+      result
+    }
+
+    val resulti = validateNew(webIdFile, shapeFile)
+    println(resulti.violations.isEmpty)
+    println(resulti.conforms)
   }
 }
 

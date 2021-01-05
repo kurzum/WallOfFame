@@ -83,17 +83,18 @@
 	sh:message "Optional property foaf:firstname is missing."@en .
 	
 <#geekcode> a sh:PropertyShape ;
-	sh:path foaf:geekcode ;
-	sh:minCount 1 ;
-	sh:maxCount 1 ;
-	sh:severity sh:Info ;
-	sh:message "Optional property foaf:geekcode is missing."@en .
-	
-<#dbpedia-support-info>  
+			sh:path foaf:geekcode ;
+			sh:minCount 1 ;
+			sh:maxCount 1 ;
+			sh:severity sh:Info ;
+			sh:message "Optional property foaf:geekcode is missing."@en .
+
+<#dbpedia-support-info>
 	sh:path rdf:type ;
 	sh:hasValue dbo:DBpedian ;
 	sh:severity sh:Info ;
-	sh:message "to be included in the WOF, we require that you show your support to DBpedia by adding a dbo:DBpedian to your URI."@en .
+	sh:message
+		"to be included in the WOF, we require that you show your support to DBpedia by adding '<#this> a dbo:DBpedian' to your URI."@en .
 #===PersonShapeProperties===#
 
 

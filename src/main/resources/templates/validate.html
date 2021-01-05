@@ -49,6 +49,7 @@
             <br/>
             <form method="post" th:action="@{/validate}" th:object="${webid}">
                 <textarea class="form-control" id="webid" th:field="*{turtle}"></textarea>
+                <br>
                 <button class="btn btn-primary" type="submit">Validate</button>
             </form>
         </div>
@@ -76,42 +77,90 @@
         </div>
     </div>
 
-    <div>
+    <br>
+
+    <div id="result" th:if="${result.getResult() != null}">
+
         <button class="collapsible violations" type="button">
-            Problem: <p th:text="${shortResult}"></p>
-            <br>
-            <small>Conflicting nodes: 1
-            </small>
+            <strong>Result</strong>
+            <div th:if="${not #arrays.isEmpty(result.getViolations())}">
+                Some Violations have occured.
+                <br>
+                <small>
+                    <div th:inline="text">
+                        Conflicting nodes: [[${#arrays.length(result.getViolations())}]]
+                    </div>
+                </small>
+            </div>
+            <div th:if="${not #arrays.isEmpty(result.getInfos())}">
+                Some Warnings have occured.
+                <br>
+                <small>
+                    <div th:inline="text">
+                        Conflicting nodes: [[${#arrays.length(result.getInfos())}]]
+                    </div>
+                </small>
+            </div>
+            <div th:if="${#arrays.isEmpty(result.getInfos()) and #arrays.isEmpty(result.getViolations())}">
+                Your WebId is perfect!
+            </div>
         </button>
 
         <div class="content">
-            <p>
-                <strong>SHACL Result:</strong>
-            <div class="form-control" id="result" style="white-space: pre-wrap" th:text="${result}"></div>
-            </li>
-            </p>
+            <div id="violations" class="violations" th:if="${not #arrays.isEmpty(result.getViolations())}">
+                <strong> Warnings: </strong>
+                <br>
+                <ul th:each="violation : ${result.getViolations()}">
+                    <li>
+                        <p th:inline="text">
+                            Conflicting Node: [[${violation._1()}]]
+                            <br>
+                            Message: <b th:text="${violation._2()}">&nbsp;</b>
+                        </p>
+                    </li>
+                </ul>
+            </div>
+
+            <div id="warnings" class="warnings" th:if="${not #arrays.isEmpty(result.getInfos())}">
+                <strong> Warnings: </strong>
+                <br>
+                <ul th:each="warning : ${result.getInfos()}">
+                    <li>
+                        <p th:inline="text">
+                            Conflicting Node: [[${warning._1()}]]
+                            <br>
+                            Message: <b th:text="${warning._2()}">&nbsp;</b>
+                        </p>
+                    </li>
+                </ul>
+            </div>
+
+            <div id="shaclResult">
+                <strong>Full Shacl Result: </strong>
+                <div class="form-control" id="fineGrainedResult" style="white-space: pre-wrap"
+                     th:text="${result.result()}"></div>
+            </div>
         </div>
     </div>
+
+    <div id="showcase"></div>
+    <code>var yate = YATE(document.getElementById("showcase"));
+    </code>
+    <br>
+    (or, if you would like to instantiate YATE from an existing text area, use
+    <code>var yate = YATE.fromTextArea(document.getElementById('textAreaItem'));
+    </code>
+</div>
 </div>
 
-</body>
 
-<script>
-
-    var coll = document.getElementsByClassName("collapsible");
-    var i;
-
-    for (i = 0; i < coll.length; i++) {
-        coll[i].addEventListener("click", function () {
-            this.classList.toggle("active");
-            var content = this.nextElementSibling;
-            if (content.style.display === "block") {
-                content.style.display = "none";
-            } else {
-                content.style.display = "block";
-            }
-        });
-    }
+<script th:src="@{js/validate.js}"></script>
+<script th:src="@{js/yate.bundled.min.js}"></script>
+<script th:src="@{js/doc.min.js}"></script>
+<script type="text/javascript">
+    var yate = YATE(document.getElementById("showcase"));
 </script>
+
+</body>
 
 </html>

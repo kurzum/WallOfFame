@@ -18,7 +18,7 @@ object WebIdUniformer {
     if (dir.exists && dir.isDirectory) {
       dir.listRecursively().foreach(file => {
         println(file.pathAsString)
-        if (WebIdValidator.validateWithShacl(file)._1) uniform(file, constructModel)
+        if (WebIdValidator.validate(file).conforms) uniform(file, constructModel)
       })
     }
 

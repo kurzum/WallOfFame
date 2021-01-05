@@ -5,9 +5,11 @@ import org.apache.commons.io.IOUtils
 import org.apache.jena.rdf.model.ModelFactory
 import org.apache.jena.riot.{RDFDataMgr, RiotException}
 import org.dbpedia.walloffame.Config
-import org.dbpedia.walloffame.spring.model.WebId
+import org.dbpedia.walloffame.convert.ModelToJSONConverter
+import org.dbpedia.walloffame.spring.model.{Result, WebId}
 import org.dbpedia.walloffame.uniform.WebIdUniformer
 import org.dbpedia.walloffame.validation.WebIdValidator
+import org.dbpedia.walloffame.virtuoso.VirtuosoHandler
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.{GetMapping, ModelAttribute, PostMapping}
 import org.springframework.web.servlet.ModelAndView
@@ -64,7 +66,7 @@ class ValidationController(config: Config) {
 
     webid.insertFieldsFromTurtle(model)
     modelAndView.addObject("webid", webid)
-    modelAndView.addObject("result", "")
+    modelAndView.addObject("result", new Result)
     modelAndView.addObject("shortResult", "")
     modelAndView.setViewName("validate")
     modelAndView
@@ -74,20 +76,20 @@ class ValidationController(config: Config) {
   def sendWebIdToValidate(@ModelAttribute("webid") newWebId: WebId): ModelAndView = {
 
     val turtle = newWebId.turtle
-    println(turtle)
 
+    //write file from webid string
     import java.io.PrintWriter
     val fileToValidate = File("./tmp/webIdToValidate.ttl")
     new PrintWriter(fileToValidate.toJava) {
       write(turtle)
-      close
+      close()
     }
 
     try {
 
-      val result = WebIdValidator.validateWithShacl(fileToValidate)
+      val result = WebIdValidator.validate(fileToValidate)
 
-      if (result._1) {
+      if (result.conforms) {
         //valid webid
 
         val model = WebIdUniformer.uniform(fileToValidate)
@@ -108,18 +110,19 @@ class ValidationController(config: Config) {
         //        fileToValidate.delete()
         //        val webids = ModelToJSONConverter.appendToJSONFile(VirtuosoHandler.getModel(config.virtuoso), File(config.exhibit.file))
         //        val webids = ModelToJSONConverter.toJSON(model)
-        val modelView = new ModelAndView("validate", "result", result._2.toString())
+        val modelView = new ModelAndView("validate", "result", result)
         modelView.addObject("webid", newWebId)
       }
       else {
-
+        //invalide webid
         fileToValidate.delete()
-        new ModelAndView("validate", "result", result._2.toString())
+        new ModelAndView("validate", "result", result)
 
       }
     } catch {
       case riot: RiotException => {
-        val result = riot.toString
+        val result = new Result
+        result.addViolation("RiotException", riot.toString)
         fileToValidate.delete()
         new ModelAndView("validate", "result", result)
       }

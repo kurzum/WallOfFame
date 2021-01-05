@@ -43,5 +43,19 @@ object SelectQueries {
 
   }
 
+  val resultSeverity =
+    """
+      |PREFIX sh: <http://www.w3.org/ns/shacl#>
+      |
+      |SELECT ?severity ?focusNode ?message
+      |WHERE {
+      |  ?report  a  sh:ValidationReport ;
+      |           sh:result ?result .
+      |  ?result  sh:resultSeverity ?severity ;
+      |           sh:focusNode ?focusNode ;
+      |           sh:resultMessage ?message .
+      |}
+      |""".stripMargin
+
 
 }
