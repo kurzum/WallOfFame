@@ -43,12 +43,12 @@ class InitRunner extends CommandLineRunner {
     //insert all uniformed webids into virtuoso
     dir.children.foreach(webid =>{
       val uniformedModel = WebIdUniformer.uniform(webid)
-      VirtuosoHandler.insertModel(uniformedModel,config.virtuoso, webid.nameWithoutExtension)
+      VirtuosoHandler.insertModel(uniformedModel, config.virtuoso, webid.nameWithoutExtension(false))
     })
 
     //create json for exhibit
     ModelToJSONConverter.createJSONFile(
-      VirtuosoHandler.getModelOfAllWebids(config.virtuoso),
+      VirtuosoHandler.getAllWebIds(config.virtuoso),
       File(config.exhibit.file)
     )
   }

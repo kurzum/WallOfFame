@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>DBpedia's Wall of Fame</title>
     <meta content="text/html;charset=UTF-8" http-equiv="content-type"/>
@@ -22,7 +22,7 @@
 
 <table id="header">
     <tr style="vertical-align:middle">
-        <td><img th:src="@{images/DBpediaLogo.svg}"/></td>
+        <td><img th:src="@{images/DBpediaLogo.svg}" alt="DBpedia Logo"/></td>
         <td>
             <p>
                 Welcome to DBpedia's Wall of Fame. Here you can have a look at all Users registered on the DBpedia
@@ -48,7 +48,7 @@
                     <hr/>
                     <div data-ex-expression=".name" data-ex-facet-label="Name" data-ex-height="15em"
                          data-ex-role="facet"></div>
-                    <div data-ex-expression=".keyname" data-ex-facet-label="Key Name" data-ex-height="20em"
+                    <div data-ex-expression=".gender" data-ex-facet-label="Gender" data-ex-height="20em"
                          data-ex-role="facet"></div>
                 </td>
 
@@ -59,10 +59,12 @@
                                 <tr>
                                     <td style="position: relative">
                                         <div class="itemThumbnail-blocker"></div>
-                                        <img data-ex-src-content=".img" style="width: 200px; height: 200px"/></td>
+                                        <img data-ex-src-content=".img" style="width: 200px; height: 200px"
+                                             onerror="if (this.src != 'https://wiki.dbpedia.org/sites/default/files/DBpediaLogo.png') this.src = 'https://wiki.dbpedia.org/sites/default/files/DBpediaLogo.png';">
+                                    </td>
                                     <td>
-                                        <h1><span data-ex-content=".name"></span></h1>
-                                        Name: <span data-ex-content=".firstname"></span>
+                                        <h1><a id="account"><span data-ex-content=".account"></span></a></h1>
+                                        <h2>Name: <span data-ex-content=".name"></span></h2>
                                         <br>
                                         Gender: <span data-ex-content=".gender"></span>
                                         <br>
@@ -81,17 +83,18 @@
 
                             <table data-ex-role="lens" class="itemThumbnail" style="display: none;">
                                 <tr>
-                                    <td style="vertial-align:bottom" class="itemThumbnail-thumbnailContainer">
+                                    <td style="vertical-align:bottom" class="itemThumbnail-thumbnailContainer">
                                         <div style="position: relative">
                                             <div class="itemThumbnail-blocker"></div>
-                                            <img data-ex-src-content=".img" style="width: 100px; height: 100px"/>
+                                            <img data-ex-src-content=".img" style="width: 100px; height: 100px"
+                                                 onerror="if (this.src != 'https://wiki.dbpedia.org/sites/default/files/DBpediaLogo.png') this.src = 'https://wiki.dbpedia.org/sites/default/files/DBpediaLogo.png';">
                                         </div>
                                     </td>
                                 </tr>
 
                                 <tr>
                                     <td>
-                                        <span data-ex-content=".name"></span>
+                                        <span data-ex-content=".account"></span>
                                     </td>
                                 </tr>
 

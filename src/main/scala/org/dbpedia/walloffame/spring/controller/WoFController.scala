@@ -21,9 +21,9 @@ class WoFController {
   def getIndexPage(): String = {
     val optModels =
       try {
-        VirtuosoHandler.getModelOfAllWebids(config.virtuoso)
+        VirtuosoHandler.getAllWebIds(config.virtuoso)
       } catch {
-        case virtuosoException: VirtuosoException => Seq.empty[Model]
+        case virtuosoException: VirtuosoException => Seq.empty[(String, Model)]
       }
 
     if (optModels.nonEmpty) ModelToJSONConverter.createJSONFile(optModels, File(config.exhibit.file))

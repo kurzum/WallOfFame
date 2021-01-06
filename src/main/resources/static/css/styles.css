@@ -5,6 +5,7 @@ body {
     padding: 0;
 }
 
+
 table {
     font-size: 100%;
 }
@@ -81,7 +82,7 @@ div.itemThumbnail-blocker {
     position: absolute;
     width: 100%;
     height: 100%;
-    top: 0px;
-    left: 0px;
+    top: 0;
+    left: 0;
     z-index: 1000;
 }

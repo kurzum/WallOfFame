@@ -13,7 +13,7 @@ import scala.collection.mutable.ListBuffer
 object ModelToJSONConverter {
 
 
-  def createJSONFile(models: Seq[Model], outFile: File): File = {
+  def createJSONFile(models: Seq[(String, Model)], outFile: File): File = {
     val json = toJSON(models)
 
     val bw = outFile.newBufferedWriter
@@ -34,11 +34,11 @@ object ModelToJSONConverter {
 //  }
 
 
-  def toJSON(models: Seq[Model]): String = {
+  def toJSON(models: Seq[(String, Model)]): String = {
     val items = new ListBuffer[ListBuffer[String]]
 
     models.foreach(model => {
-      val results = QueryHandler.executeQuery(SelectQueries.getQueryWebIdData(), model)
+      val results = QueryHandler.executeQuery(SelectQueries.getQueryWebIdData(), model._2)
 
       results.foreach(result => {
         val item = new ListBuffer[String]
@@ -50,19 +50,19 @@ object ModelToJSONConverter {
                |""".stripMargin
         }
 
+
+        addToListBuffer("account", model._1)
         addToListBuffer("webid", result.getResource("?webid").toString)
         addToListBuffer("maker", result.getResource("?maker").toString)
         addToListBuffer("name", result.getLiteral("?name").getLexicalForm)
         addToListBuffer("keyname", result.getLiteral("?keyname").getLexicalForm)
         addToListBuffer("keyvalue", result.getLiteral("?keyvalue").getLexicalForm)
 
-        var optional = QueryHandler.executeQuery(SelectOptionalQueries.queryFirstName(), model)
-        if (optional.nonEmpty) addToListBuffer("firstname", optional.head.getLiteral("?firstname").getLexicalForm)
 
-        optional = QueryHandler.executeQuery(SelectOptionalQueries.queryGeekCode(), model)
+        var optional = QueryHandler.executeQuery(SelectOptionalQueries.queryGeekCode(), model._2)
         if (optional.nonEmpty) addToListBuffer("geekcode", optional.head.getLiteral("?geekcode").getLexicalForm)
 
-        optional = QueryHandler.executeQuery(SelectOptionalQueries.queryImg(), model)
+        optional = QueryHandler.executeQuery(SelectOptionalQueries.queryImg(), model._2)
         if (optional.nonEmpty) {
           try {
             addToListBuffer("img", optional.head.getResource("?img").toString)
@@ -71,7 +71,7 @@ object ModelToJSONConverter {
           }
         }
 
-        optional = QueryHandler.executeQuery(SelectOptionalQueries.queryGender(), model)
+        optional = QueryHandler.executeQuery(SelectOptionalQueries.queryGender(), model._2)
         if (optional.nonEmpty) addToListBuffer("gender", optional.head.getLiteral("?gender").getLexicalForm)
 
         items += item

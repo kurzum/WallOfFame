@@ -12,7 +12,7 @@ class JSONConverterTest() {
     //    val out = new ByteArrayOutputStream()
     //    RDFDataMgr.write(out, model, Lang.JSONLD)
     //    println( out.toString)
-    ModelToJSONConverter.createJSONFile(Seq(model), json)
+    ModelToJSONConverter.createJSONFile(Seq(("asd", model)), json)
 
     json.delete()
   }

@@ -27,6 +27,7 @@ object WebIdCrawler {
     }
 
     accounts.foreach(account => {
+//      println(s"ACCOUNT: $account")
       try{
         val accountModel = ModelFactory.createDefaultModel()
         accountModel.read(account.head, "TURTLE")

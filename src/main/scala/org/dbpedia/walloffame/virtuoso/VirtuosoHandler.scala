@@ -2,7 +2,7 @@ package org.dbpedia.walloffame.virtuoso
 
 import better.files.File
 import org.apache.jena.query.{Query, QueryFactory}
-import org.apache.jena.rdf.model.{Model, ModelFactory}
+import org.apache.jena.rdf.model.{Model, ModelFactory, ModelMaker}
 import org.apache.jena.util.FileManager
 import org.dbpedia.walloffame.VosConfig
 import org.slf4j.LoggerFactory
@@ -87,17 +87,17 @@ object VirtuosoHandler {
 
   }
 
-  def getModelOfAllWebids(vosConfig: VosConfig): Seq[Model] = {
+  def getAllWebIds(vosConfig: VosConfig): Seq[(String, Model)] = {
     try {
-      var models = Seq.empty[Model]
+      var models = Seq.empty[(String, Model)]
       VirtuosoHandler.getAllGraphs(vosConfig).foreach(graph =>
-        models = models :+ VirtuosoHandler.getModel(vosConfig, graph)
+        models = models :+ (graph.split('/').last.capitalize, VirtuosoHandler.getModel(vosConfig, graph))
       )
       models
     } catch {
       case virtuosoException: VirtuosoException => {
         LoggerFactory.getLogger("Virtuoso").error("Connection to Virtuoso DB failed.")
-        Seq.empty[Model]
+        Seq.empty[(String, Model)]
       }
     }
   }
