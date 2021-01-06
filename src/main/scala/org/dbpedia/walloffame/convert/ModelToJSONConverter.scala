@@ -2,19 +2,19 @@ package org.dbpedia.walloffame.convert
 
 import java.io.FileWriter
 import java.nio.file.{Files, Paths}
-
 import better.files.File
 import better.files.File.OpenOptions
 import org.apache.jena.rdf.model.Model
 import org.dbpedia.walloffame.uniform.QueryHandler
-import org.dbpedia.walloffame.uniform.queries.SelectQueries
+import org.dbpedia.walloffame.uniform.queries.{SelectOptionalQueries, SelectQueries}
+
 import scala.collection.mutable.ListBuffer
 
 object ModelToJSONConverter {
 
 
-  def createJSONFile(model: Model, outFile:File):File={
-    val json = toJSON(model)
+  def createJSONFile(models: Seq[Model], outFile: File): File = {
+    val json = toJSON(models)
 
     val bw = outFile.newBufferedWriter
     bw.write(json)
@@ -23,8 +23,8 @@ object ModelToJSONConverter {
     outFile
   }
 
-//  def appendToJSONFile(model: Model, jsonFile:File):File={
-//    val json = toJSON(model)
+  //  def appendToJSONFile(model: Model, jsonFile:File):File={
+  //    val json = toJSON(model)
 //
 //    val bw = jsonFile.newBufferedWriter(openOptions = OpenOptions.append)
 //    bw.write(json)
@@ -34,29 +34,48 @@ object ModelToJSONConverter {
 //  }
 
 
-  def toJSON(model: Model): String = {
-
-    val results = QueryHandler.executeQuery(SelectQueries.getQueryWebIdData(), model)
-
+  def toJSON(models: Seq[Model]): String = {
     val items = new ListBuffer[ListBuffer[String]]
 
-    results.foreach(result => {
-      val item = new ListBuffer[String]
+    models.foreach(model => {
+      val results = QueryHandler.executeQuery(SelectQueries.getQueryWebIdData(), model)
 
-      def addToListBuffer(varName: String, entry: String) {
-        item +=
-          s"""
-             |"$varName": "$entry"
-             |""".stripMargin
-      }
+      results.foreach(result => {
+        val item = new ListBuffer[String]
 
-      addToListBuffer("webid", result.getResource("?webid").toString)
-      addToListBuffer("maker", result.getResource("?maker").toString)
-      addToListBuffer("name", result.getLiteral("?name").getLexicalForm)
-      addToListBuffer("keyname", result.getLiteral("?keyname").getLexicalForm)
-      addToListBuffer("keyvalue", result.getLiteral("?keyvalue").getLexicalForm)
+        def addToListBuffer(varName: String, entry: String) {
+          item +=
+            s"""
+               |"$varName": "$entry"
+               |""".stripMargin
+        }
 
-      items += item
+        addToListBuffer("webid", result.getResource("?webid").toString)
+        addToListBuffer("maker", result.getResource("?maker").toString)
+        addToListBuffer("name", result.getLiteral("?name").getLexicalForm)
+        addToListBuffer("keyname", result.getLiteral("?keyname").getLexicalForm)
+        addToListBuffer("keyvalue", result.getLiteral("?keyvalue").getLexicalForm)
+
+        var optional = QueryHandler.executeQuery(SelectOptionalQueries.queryFirstName(), model)
+        if (optional.nonEmpty) addToListBuffer("firstname", optional.head.getLiteral("?firstname").getLexicalForm)
+
+        optional = QueryHandler.executeQuery(SelectOptionalQueries.queryGeekCode(), model)
+        if (optional.nonEmpty) addToListBuffer("geekcode", optional.head.getLiteral("?geekcode").getLexicalForm)
+
+        optional = QueryHandler.executeQuery(SelectOptionalQueries.queryImg(), model)
+        if (optional.nonEmpty) {
+          try {
+            addToListBuffer("img", optional.head.getResource("?img").toString)
+          } catch {
+            case classCastException: ClassCastException => addToListBuffer("img", optional.head.getLiteral("?img").getLexicalForm)
+          }
+        }
+
+        optional = QueryHandler.executeQuery(SelectOptionalQueries.queryGender(), model)
+        if (optional.nonEmpty) addToListBuffer("gender", optional.head.getLiteral("?gender").getLexicalForm)
+
+        items += item
+      })
     })
 
 
@@ -79,6 +98,9 @@ object ModelToJSONConverter {
          |            "valueType": "url"
          |        },
          |        "primaryTopic": {
+         |            "valueType": "url"
+         |        },
+         |        "img": {
          |            "valueType": "url"
          |        }
          |    },

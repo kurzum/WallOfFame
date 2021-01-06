@@ -1,6 +1,7 @@
 package org.dbpedia.walloffame.spring.controller
 
 import better.files.File
+import org.apache.jena.rdf.model.Model
 import org.dbpedia.walloffame.Config
 import org.dbpedia.walloffame.convert.ModelToJSONConverter
 import org.dbpedia.walloffame.virtuoso.VirtuosoHandler
@@ -18,20 +19,25 @@ class WoFController {
 
   @RequestMapping(value = Array("/walloffame"), method = Array(RequestMethod.GET))
   def getIndexPage(): String = {
-    val optModel =
+    val optModels =
       try {
         VirtuosoHandler.getModelOfAllWebids(config.virtuoso)
       } catch {
-        case virtuosoException: VirtuosoException => None
+        case virtuosoException: VirtuosoException => Seq.empty[Model]
       }
 
-    if (!(optModel == None)) ModelToJSONConverter.createJSONFile(optModel.get, File(config.exhibit.file))
+    if (optModels.nonEmpty) ModelToJSONConverter.createJSONFile(optModels, File(config.exhibit.file))
     "walloffame"
   }
 
   @RequestMapping(value = Array("/result"), method = Array(RequestMethod.GET))
   def getResultPage(): String = {
     "result"
+  }
+
+  @RequestMapping(value = Array("/yate"), method = Array(RequestMethod.GET))
+  def getYate(): String = {
+    "yate"
   }
 
 }

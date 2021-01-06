@@ -16,7 +16,7 @@
 <body>
 
 <ul id="path">
-    <li><a href="?">Wall of Fame</a></li>
+    <li><a href="/walloffame">Wall of Fame</a></li>
     <li><a href="/validate">Validate WebId</a></li>
 </ul>
 
@@ -29,8 +29,8 @@
                 Databus. <br>
                 Additionally, you can validate and publish your own WebId here. <br><br>
                 For further information about WebIds check <a href="https://github.com/dbpedia/webid" target="_blank">DBpedia's
-                    WebId Repository</a> and the
-                <a href="https://forum.dbpedia.org/">DBpedia Forum</a>.
+                WebId Repository</a> and the
+                <a href="https://forum.dbpedia.org/" target="_blank">DBpedia Forum</a>.
             </p>
         </td>
     </tr>
@@ -57,13 +57,18 @@
                         <div class="item" data-ex-role="lens" style="display: block;">
                             <table style="border-spacing:5px">
                                 <tr>
+                                    <td style="position: relative">
+                                        <div class="itemThumbnail-blocker"></div>
+                                        <img data-ex-src-content=".img" style="width: 200px; height: 200px"/></td>
                                     <td>
                                         <h1><span data-ex-content=".name"></span></h1>
-                                        <h2>Maker: <span data-ex-content=".maker"></span></h2>
+                                        Name: <span data-ex-content=".firstname"></span>
+                                        <br>
+                                        Gender: <span data-ex-content=".gender"></span>
+                                        <br>
+                                        GeekCode: <span data-ex-content=".geekcode"></span>
 
-                                        Public Key:
-                                        <p data-ex-content=".keyname"></p>
-                                        <div style="max-width:400px; word-wrap:break-word;" data-ex-content=".keyvalue"></div>
+                                        <h2>WebId: <span data-ex-content=".webid"></span></h2>
                                     </td>
                                 </tr>
                             </table>
@@ -74,16 +79,26 @@
                              data-ex-show-all="true"
                              data-ex-view-class="Thumbnail">
 
-                            <table class="itemThumbnail" data-ex-role="lens" style="display: none;">
+                            <table data-ex-role="lens" class="itemThumbnail" style="display: none;">
                                 <tr>
-                                    <td class="itemThumbnail-thumbnailContainer" style="vertical-align:bottom">
-                                        <div style="position: relative"><span data-ex-content=".name"></span></div>
+                                    <td style="vertial-align:bottom" class="itemThumbnail-thumbnailContainer">
+                                        <div style="position: relative">
+                                            <div class="itemThumbnail-blocker"></div>
+                                            <img data-ex-src-content=".img" style="width: 100px; height: 100px"/>
+                                        </div>
                                     </td>
                                 </tr>
+
                                 <tr>
-                                    <td class="itemThumbnail-caption">
-                                        <span data-ex-content="value"></span>
+                                    <td>
+                                        <span data-ex-content=".name"></span>
                                     </td>
+                                </tr>
+
+                                <tr class="itemThumbnail-caption">
+                                    <td>
+                                        <span data-ex-content="value"></span>
+                                    <td>
                                 </tr>
                             </table>
                         </div>

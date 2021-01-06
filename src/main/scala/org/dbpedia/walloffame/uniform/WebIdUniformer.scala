@@ -87,8 +87,6 @@ object WebIdUniformer {
       logger.info(s"name not found for ${webidFile.name}.")
       return constructModel
     }
-
-
 //    ConstructOptionalQueries.getClass.getMethods.foreach(method =>
 //      if (!construct(method)) {
 //        logger.warn(s"optional item(s) not found for ${webidFile.name}.")

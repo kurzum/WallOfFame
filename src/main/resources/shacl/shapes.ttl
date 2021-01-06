@@ -94,7 +94,7 @@
 	sh:hasValue dbo:DBpedian ;
 	sh:severity sh:Info ;
 	sh:message
-		"to be included in the WOF, we require that you show your support to DBpedia by adding '<#this> a dbo:DBpedian' to your URI."@en .
+		"Show your support to DBpedia by adding '<#me> a dbo:DBpedian' to your WebID/FOAF. If you do, we will add you to our website."@en .
 #===PersonShapeProperties===#
 
 

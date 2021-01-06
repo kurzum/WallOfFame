@@ -48,7 +48,7 @@ class InitRunner extends CommandLineRunner {
 
     //create json for exhibit
     ModelToJSONConverter.createJSONFile(
-      VirtuosoHandler.getModelOfAllWebids(config.virtuoso).get,
+      VirtuosoHandler.getModelOfAllWebids(config.virtuoso),
       File(config.exhibit.file)
     )
   }

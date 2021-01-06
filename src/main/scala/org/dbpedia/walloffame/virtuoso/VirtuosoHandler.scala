@@ -51,7 +51,6 @@ object VirtuosoHandler {
         Option(newVirt)
       } catch {
         case virtuosoException: VirtuosoException => {
-        println("haloo")
         LoggerFactory.getLogger("Virtuoso").error("Connection refused")
         None
       }
@@ -88,17 +87,17 @@ object VirtuosoHandler {
 
   }
 
-  def getModelOfAllWebids(vosConfig: VosConfig):Option[Model]={
-    try{
-      val model = ModelFactory.createDefaultModel()
+  def getModelOfAllWebids(vosConfig: VosConfig): Seq[Model] = {
+    try {
+      var models = Seq.empty[Model]
       VirtuosoHandler.getAllGraphs(vosConfig).foreach(graph =>
-        model.add(VirtuosoHandler.getModel(vosConfig, graph))
+        models = models :+ VirtuosoHandler.getModel(vosConfig, graph)
       )
-      Option(model)
+      models
     } catch {
       case virtuosoException: VirtuosoException => {
         LoggerFactory.getLogger("Virtuoso").error("Connection to Virtuoso DB failed.")
-        None
+        Seq.empty[Model]
       }
     }
   }
