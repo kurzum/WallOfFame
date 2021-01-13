@@ -20,7 +20,7 @@ class InitRunner extends CommandLineRunner {
     File("./tmp/").delete(true)
     File("./tmp/").createDirectory()
 
-//    prepareWallOfFame()
+    prepareWallOfFame()
   }
 
   def prepareWallOfFame() = {
