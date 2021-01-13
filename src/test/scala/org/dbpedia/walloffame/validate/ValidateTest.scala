@@ -10,7 +10,6 @@ class ValidateTest {
 
   @Test
   def setWebId() = {
-    val webid = new WebId
     val str =
       """
         |@base <https://raw.githubusercontent.com/Eisenbahnplatte/eisenbahnplatte.github.io/master/webid.ttl> .
@@ -38,8 +37,6 @@ class ValidateTest {
         |     ] .
         |""".stripMargin
 
-    webid.setTurtle(str)
-
     import java.io.PrintWriter
     val fileToValidate = File("./tmp/webIdToValidate.ttl")
     new PrintWriter(fileToValidate.toJava) {
@@ -49,6 +46,6 @@ class ValidateTest {
 
     val model = RDFDataMgr.loadModel(fileToValidate.pathAsString)
 
-    webid.insertFieldsFromTurtle(model)
+    val webid = new WebId(model)
   }
 }

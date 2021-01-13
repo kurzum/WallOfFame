@@ -1,6 +1,7 @@
 package org.dbpedia.walloffame.validation
 
 import better.files.File
+import org.apache.jena.rdf.model.ModelFactory
 import org.apache.jena.riot.{Lang, RDFDataMgr}
 import org.apache.jena.shacl.{ShaclValidator, Shapes}
 import org.dbpedia.walloffame.spring.model.Result
@@ -10,6 +11,19 @@ import org.dbpedia.walloffame.uniform.queries.SelectQueries
 import java.io.{ByteArrayOutputStream, File => JavaFile}
 
 object WebIdValidator {
+
+
+  def writeFile(str: String): File = {
+
+    import java.io.PrintWriter
+    val fileToValidate = File("./tmp/webIdToValidate.ttl")
+    new PrintWriter(fileToValidate.toJava) {
+      write(str)
+      close
+    }
+
+    fileToValidate
+  }
 
 
   def validate(webIdFile: File): Result = {

@@ -7,9 +7,14 @@
     <script th:src="@{js/bootstrap.min.js}"></script>
     <link rel="stylesheet" type="text/css" th:href="@{css/validate.css}"/>
     <link rel="stylesheet" type="text/css" th:href="@{css/yate.css}"/>
+
+
 </head>
 
 <body>
+<!--/*@thymesVar id="result" type="org.dbpedia.walloffame.spring.model.Result"*/-->
+<!--/*@thymesVar id="webid" type="org.dbpedia.walloffame.spring.model.WebId"*/-->
+
 <!-- Navigation -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
@@ -31,6 +36,9 @@
                     <a class="nav-link" href="/validate">WebId Validator</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="http://localhost:8895/sparql/">Sparql Endpoint</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="/about">About</a>
                 </li>
 
@@ -39,11 +47,33 @@
     </div>
 </nav>
 
-<div class="container">
-    <br>
+<br>
+
+<div class="container-fluid" style="padding: 100px; padding-top: 0px">
     <div class="row">
         <div class="col-sm">
-            You can either paste your plain WebId or the URL to your WebId here.
+            You can paste the URL to your WebId here.
+            <br/>
+            <form method="post" name="URLForm" th:action="@{/fetchAndValidate}" th:object="${webid}"
+                  onsubmit="return validateForm()">
+                <input class="form-control" type="text" th:field="*{url}" id="webidURL" name="webidURL">
+                <!--                <textarea class="form-control" name="webIdURL" id="webidURL" th:field="*{url}"></textarea>-->
+                <div id="url_ok" class="alert alert-danger" style="display: none">
+                    URL should contain HTTPS
+                </div>
+                <br>
+                <input class="btn btn-primary" type="submit" value="Fetch and Validate">
+                <!--                <button class="btn btn-primary" type="submit">Fetch and Validate</button>-->
+            </form>
+
+        </div>
+    </div>
+
+    <br>
+
+    <div class="row">
+        <div class="col-sm">
+            You can paste your plain WebId here.
             <br/>
             <form method="post" th:action="@{/validate}" th:object="${webid}">
                 <textarea class="form-control" id="webid" th:field="*{turtle}"></textarea>
@@ -77,36 +107,37 @@
 
     <br>
 
-    <div id="result" th:if="${result.getResult() != null}">
-
-        <button id="shortResult" class="collapsible" type="button">
-            <strong>Result</strong>
-            <ul>
-                <li th:if="${not #arrays.isEmpty(result.getViolations())}">
-                    Violations occurred in your WebId.
-                    <br>
-                    <small>
-                        <div th:inline="text">
-                            Conflicting nodes: [[${#arrays.length(result.getViolations())}]]
-                        </div>
-                    </small>
-                </li>
-                <li th:if="${not #arrays.isEmpty(result.getInfos())}">
-                    Warnings occurred in your WebId.
-                    <br>
-                    <small>
-                        <div th:inline="text">
-                            Conflicting nodes: [[${#arrays.length(result.getInfos())}]]
-                        </div>
-                    </small>
-                </li>
-                <li th:if="${#arrays.isEmpty(result.getInfos()) and #arrays.isEmpty(result.getViolations())}">
-                    Your WebId is perfect!
-                </li>
-            </ul>
-        </button>
+    <div id="result" th:if="${result.getResult() != null or not #arrays.isEmpty(result.getViolations())}">
+        <!--        <button id="shortResult" class="collapsible" type="button">-->
+        <!--            <strong>Result</strong>-->
+        <!--            <ul>-->
+        <!--                <li th:if="${not #arrays.isEmpty(result.getViolations())}">-->
+        <!--                    Violations occurred in your WebId.-->
+        <!--                    <br>-->
+        <!--                    <small>-->
+        <!--                        <div th:inline="text">-->
+        <!--                            Conflicting nodes: [[${#arrays.length(result.getViolations())}]]-->
+        <!--                        </div>-->
+        <!--                    </small>-->
+        <!--                </li>-->
+        <!--                <li th:if="${not #arrays.isEmpty(result.getInfos())}">-->
+        <!--                    Warnings occurred in your WebId.-->
+        <!--                    <br>-->
+        <!--                    <small>-->
+        <!--                        <div th:inline="text">-->
+        <!--                            Conflicting nodes: [[${#arrays.length(result.getInfos())}]]-->
+        <!--                        </div>-->
+        <!--                    </small>-->
+        <!--                </li>-->
+        <!--                <li th:if="${#arrays.isEmpty(result.getInfos()) and #arrays.isEmpty(result.getViolations())}">-->
+        <!--                    Your WebId is perfect!-->
+        <!--                </li>-->
+        <!--            </ul>-->
+        <!--        </button>-->
 
         <div class="content">
+
+            <!--            <h3> Validation Result: </h3>-->
 
             <div id="violations" class="violations" th:if="${not #arrays.isEmpty(result.getViolations())}">
                 <strong> Violations: </strong>
@@ -139,7 +170,7 @@
                 </ul>
             </div>
 
-            <div id="shaclResult" class="shaclResult">
+            <div id="shaclResult" class="shaclResult" th:if="${result.getResult() != null}">
                 <strong>Full Shacl Result: </strong>
                 <div class="form-control" id="fineGrainedResult" style="white-space: pre-wrap"
                      th:text="${result.result()}"></div>
@@ -172,7 +203,23 @@
     }
     /*]]>*/
 </script>
+
+
+<script type="text/javascript">
+    function validateForm() {
+        var a = document.getElementById('webidURL').value;
+        if (a.toString().includes("https://")) {
+            return true;
+        } else {
+            document.getElementById('url_ok').style.display = "block"
+            return false;
+        }
+    }
+</script>
+
 <script th:src="@{js/validate.js}"></script>
+
+<!--Yate Turtle Syntax Highlighting-->
 <script th:src="@{js/yate.bundled.js}"></script>
 <script type="text/javascript">
     // var yate = YATE(document.getElementById("showcase"));

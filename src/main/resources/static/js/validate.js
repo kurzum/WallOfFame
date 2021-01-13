@@ -13,6 +13,7 @@ for (i = 0; i < coll.length; i++) {
     });
 }
 
+
 // window.addEventListener("load", function(){
 //     // Dummy Array
 //     var data2 = $("#result").val();

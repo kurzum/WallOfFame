@@ -25,6 +25,13 @@
     <dependencies>
 
         <dependency>
+            <groupId>com.github.pathikrit</groupId>
+            <artifactId>better-files_2.11</artifactId>
+            <version>3.9.1</version>
+        </dependency>
+
+        <!-- SPRING FRAMEWORK -->
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
@@ -42,6 +49,7 @@
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
         </dependency>
+        <!-- SPRING FRAMEWORK -->
 
         <!-- JENA -->
         <dependency>
@@ -77,8 +85,9 @@
         </dependency>
         <!-- JENA -->
 
+
         <!-- VIRTUOSO -->
-        <!-- These do not have a Maven repository -->
+        <!-- These are in AKSW repository -->
         <dependency>
             <groupId>com.openlink.virtuoso</groupId>
             <artifactId>virtjdbc4-1</artifactId>
@@ -93,21 +102,24 @@
         <!-- VIRTUOSO -->
 
         <dependency>
-            <groupId>com.github.pathikrit</groupId>
-            <artifactId>better-files_2.11</artifactId>
-            <version>3.9.1</version>
-        </dependency>
-
-        <dependency>
             <groupId>io.spray</groupId>
             <artifactId>spray-json_2.11</artifactId>
             <version>1.3.5</version>
         </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>javax.servlet</groupId>-->
+        <!--            <artifactId>jstl</artifactId>-->
+        <!--            <version>1.2</version>-->
+        <!--        </dependency>-->
+
+        <!-- https://mvnrepository.com/artifact/javax.validation/validation-api -->
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>jstl</artifactId>
-            <version>1.2</version>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>2.0.1.Final</version>
         </dependency>
+
+
     </dependencies>
 
 

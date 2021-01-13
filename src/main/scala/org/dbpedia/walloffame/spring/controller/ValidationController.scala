@@ -2,21 +2,26 @@ package org.dbpedia.walloffame.spring.controller
 
 import better.files.File
 import org.apache.commons.io.IOUtils
-import org.apache.jena.rdf.model.ModelFactory
-import org.apache.jena.riot.{RDFDataMgr, RiotException}
+import org.apache.jena.atlas.web.HttpException
+import org.apache.jena.rdf.model.{ModelFactory, RDFWriter}
+import org.apache.jena.riot.{Lang, RDFDataMgr, RiotException}
 import org.dbpedia.walloffame.Config
 import org.dbpedia.walloffame.convert.ModelToJSONConverter
 import org.dbpedia.walloffame.spring.model.{Result, WebId}
 import org.dbpedia.walloffame.uniform.WebIdUniformer
+import org.dbpedia.walloffame.utils.Util
 import org.dbpedia.walloffame.validation.WebIdValidator
 import org.dbpedia.walloffame.virtuoso.VirtuosoHandler
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.{GetMapping, ModelAttribute, PostMapping}
+import org.springframework.validation.BindingResult
+import org.springframework.web.bind.annotation.{GetMapping, ModelAttribute, PostMapping, RequestParam}
 import org.springframework.web.servlet.ModelAndView
 
 import java.io
-import java.io.FileInputStream
+import java.io.{BufferedInputStream, ByteArrayOutputStream, FileInputStream, IOException}
+import java.net.{MalformedURLException, SocketTimeoutException, URL, UnknownHostException}
 import javax.servlet.http.HttpServletResponse
+import javax.validation.Valid
 
 @Controller
 class ValidationController(config: Config) {
@@ -25,7 +30,7 @@ class ValidationController(config: Config) {
   //viewname is the path to the related jsp file
   @GetMapping(value = Array("/", "/validate"))
   def getValidate(modelAndView: ModelAndView): ModelAndView = {
-    val webid = new WebId
+
     val str =
       """
         |@base <https://raw.githubusercontent.com/Eisenbahnplatte/eisenbahnplatte.github.io/master/webid.ttl> .
@@ -53,18 +58,13 @@ class ValidationController(config: Config) {
         |     ] .
         |""".stripMargin
 
+    val model = RDFDataMgr.loadModel(
+      WebIdValidator.writeFile(str).pathAsString
+    )
+
+    val webid = new WebId(model)
     webid.setTurtle(str)
-
-    import java.io.PrintWriter
-    val fileToValidate = File("./tmp/webIdToValidate.ttl")
-    new PrintWriter(fileToValidate.toJava) {
-      write(str)
-      close
-    }
-
-    val model = RDFDataMgr.loadModel(fileToValidate.pathAsString)
-
-    webid.insertFieldsFromTurtle(model)
+    webid.setUrl("https://raw.githubusercontent.com/Eisenbahnplatte/eisenbahnplatte.github.io/master/webid.ttl")
     modelAndView.addObject("webid", webid)
     modelAndView.addObject("result", new Result)
     modelAndView.addObject("shortResult", "")
@@ -73,67 +73,97 @@ class ValidationController(config: Config) {
   }
 
   @PostMapping(value = Array("/", "validate"))
-  def sendWebIdToValidate(@ModelAttribute("webid") newWebId: WebId): ModelAndView = {
+  def sendWebIdToValidate(@ModelAttribute("webid") webId: WebId): ModelAndView = {
+    handlePostedWebId(webId)
+  }
 
-    val turtle = newWebId.turtle
+  def handlePostedWebId(webId: WebId): ModelAndView = {
 
-    //write file from webid string
-    import java.io.PrintWriter
-    val fileToValidate = File("./tmp/webIdToValidate.ttl")
-    new PrintWriter(fileToValidate.toJava) {
-      write(turtle)
-      close()
-    }
+    val modelAndView = new ModelAndView("validate")
+    val fileToValidate = WebIdValidator.writeFile(webId.turtle)
+
+    //    if (webId.url != null) {
+    //      val model= ModelFactory.createDefaultModel()
+    //      model.read(new FileInputStream(fileToValidate.pathAsString), webId.url)
+    //      val out = new ByteArrayOutputStream()
+    //      RDFDataMgr.write(out, model, Lang.TURTLE)
+    //      webId.setTurtle(out.toString)
+    //    }
+
 
     try {
-
       val result = WebIdValidator.validate(fileToValidate)
 
       if (result.conforms) {
         //valid webid
-
         val model = WebIdUniformer.uniform(fileToValidate)
-
-        newWebId.insertFieldsFromTurtle(model)
-        //        var wait = true
-        //        while (wait) {
-        //          try {
-        //            VirtuosoHandler.insertModel(model,config.virtuoso)
-        //            wait = false
-        //          } catch {
-        //            case e: Exception =>
-        //              println("waiting for vos to start up")
-        //              Thread.sleep(1000)
-        //          }
-        //        }
-        //
-        //        fileToValidate.delete()
-        //        val webids = ModelToJSONConverter.appendToJSONFile(VirtuosoHandler.getModel(config.virtuoso), File(config.exhibit.file))
-        //        val webids = ModelToJSONConverter.toJSON(model)
-        val modelView = new ModelAndView("validate", "result", result)
-        modelView.addObject("webid", newWebId)
+        val newWebId = new WebId(model)
+        newWebId.setTurtle(webId.turtle)
+        newWebId.setUrl(webId.url)
+        modelAndView.addObject("webid", newWebId)
+        modelAndView.addObject("result", result)
       }
       else {
         //invalide webid
-        fileToValidate.delete()
-        new ModelAndView("validate", "result", result)
-
+        modelAndView.addObject("webid", webId)
+        modelAndView.addObject("result", result)
       }
     } catch {
-      case riot: RiotException => {
-        val result = new Result
-        result.addViolation("RiotException", riot.toString)
-        fileToValidate.delete()
-        new ModelAndView("validate", "result", result)
-      }
+      case riot: RiotException => handleException(modelAndView, webId, riot.toString)
+    }
+  }
+
+  def handleException(modelAndView: ModelAndView, webId: WebId, exception: String): ModelAndView = {
+    val result = new Result
+    println(s"EXCEPTION:${exception}")
+    result.addViolation("Exception", exception)
+    modelAndView.addObject("webid", webId)
+    modelAndView.addObject("result", result)
+  }
+
+  @PostMapping(value = Array("/fetchAndValidate"))
+  def fetchAndValidate(@ModelAttribute("webid") webId: WebId): ModelAndView = {
+
+    //    println("peace")
+    //    if(bindingResult.hasErrors()){
+    //      println("hallohallo")
+    //      return new ModelAndView("validate")
+    //    }
+
+    try {
+      val model = RDFDataMgr.loadModel(webId.url.trim)
+
+      val newWebId = new WebId(model)
+      newWebId.setUrl(webId.url)
+      val out = new ByteArrayOutputStream()
+      RDFDataMgr.write(out, model, Lang.TURTLE)
+      newWebId.setTurtle(out.toString)
+
+      handlePostedWebId(newWebId)
+    } catch {
+      case unknownHostException: UnknownHostException => handleException(new ModelAndView("validate"), webId, unknownHostException.toString)
+      case malformedURLException: MalformedURLException => handleException(new ModelAndView("validate"), webId, malformedURLException.toString)
+      case ioexception: IOException => handleException(new ModelAndView("validate"), webId, ioexception.toString)
+      case httpException: HttpException => handleException(new ModelAndView("validate"), webId, httpException.toString)
+      case socketTimeoutException: SocketTimeoutException => handleException(new ModelAndView("validate"), webId, socketTimeoutException.toString)
     }
 
+    //      val turtle = Util.get(new URL(webId.url.trim))
+    //      if (turtle.isDefined) {
+    //        webId.setTurtle(turtle.get)
+    //        validateStr(webId)
+    //      }
+    //      else {
+    //        val result = new Result
+    //        result.setResult("The URL you entered is not correct")
+    //        new ModelAndView("validate", "result", result)
+    //      }
   }
+
 
   @GetMapping(value = Array("/webids.js"), produces = Array("application/json"))
   def getJson(response: HttpServletResponse): Unit = {
     try {
-
       IOUtils.copy(new FileInputStream(new io.File(config.exhibit.file)), response.getOutputStream)
       response.setStatus(200)
     } catch {

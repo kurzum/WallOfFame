@@ -1,5 +1,4 @@
 textarea {
-    height: 600px;
     width: 100%;
     -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
     -moz-box-sizing: border-box; /* Firefox, other Gecko */
@@ -47,7 +46,7 @@ textarea {
 /* Style the collapsible content. Note: hidden by default */
 .content {
     padding: 1em;
-    display: none;
+    display: block;
     overflow: hidden;
     background-color: #f1f1f1;
     width: auto;
