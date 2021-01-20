@@ -11,13 +11,12 @@ Building and Running
 Run webapp using :
 
     ./execute.sh
-      
-Per default the webapp is accessible at port 8080.
-You can start browsing at:
+
+Per default the webapp is accessible at port 8080. You can start browsing at:
 
     localhost:8080/         ,or
     localhost:8080/validate
 
-Crawl and uniform all registered WebIds with:
-    
-    curl localhost:8080/getWebIds > webids.ttl
+Get all WebIds of Wall of Fame:
+
+    mvn spring-boot:run -Dstart-class=org.dbpedia.walloffame.DatabusApplication

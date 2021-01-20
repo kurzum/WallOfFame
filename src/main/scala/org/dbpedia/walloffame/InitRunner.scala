@@ -3,7 +3,7 @@ package org.dbpedia.walloffame
 import better.files.File
 import org.apache.jena.rdf.model.ModelFactory
 import org.dbpedia.walloffame.convert.ModelToJSONConverter
-import org.dbpedia.walloffame.crawling.WebIdCrawler
+import org.dbpedia.walloffame.crawling.WebIdFetcher
 import org.dbpedia.walloffame.uniform.WebIdUniformer
 import org.dbpedia.walloffame.virtuoso.VirtuosoHandler
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,15 +17,15 @@ class InitRunner extends CommandLineRunner {
   private var config: Config = _
 
   override def run(args: String*): Unit = {
+
     File("./tmp/").delete(true)
     File("./tmp/").createDirectory()
 
     prepareWallOfFame()
+
   }
 
   def prepareWallOfFame() = {
-    //crawl webids
-    val dir = WebIdCrawler.crawl()
 
     //delete all graphs from Session before!
     var wait = true
@@ -40,16 +40,19 @@ class InitRunner extends CommandLineRunner {
       }
     }
 
-    //insert all uniformed webids into virtuoso
-    dir.children.foreach(webid =>{
-      val uniformedModel = WebIdUniformer.uniform(webid)
-      VirtuosoHandler.insertModel(uniformedModel, config.virtuoso, webid.nameWithoutExtension(false))
-    })
+    //fetch webids
+    WebIdFetcher.fetchRegisteredWebIds(config.virtuoso)
 
-    //create json for exhibit
-    ModelToJSONConverter.createJSONFile(
-      VirtuosoHandler.getAllWebIds(config.virtuoso),
-      File(config.exhibit.file)
-    )
+    //    //insert all uniformed webids into virtuoso
+    //    dir.children.foreach(webid =>{
+    //      val uniformedModel = WebIdUniformer.uniform(webid)
+    //      VirtuosoHandler.insertModel(uniformedModel, config.virtuoso, webid.nameWithoutExtension(false))
+    //    })
+    //
+    //    //create json for exhibit
+    //    ModelToJSONConverter.createJSONFile(
+    //      VirtuosoHandler.getAllWebIds(config.virtuoso),
+    //      File(config.exhibit.file)
+    //    )
   }
 }

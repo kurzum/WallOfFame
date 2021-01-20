@@ -1,16 +1,9 @@
 package org.dbpedia.walloffame.spring.model
 
 import org.apache.jena.rdf.model.{Model, ModelFactory}
-import org.apache.jena.riot.RDFDataMgr
 import org.dbpedia.walloffame.uniform.QueryHandler
 import org.dbpedia.walloffame.uniform.queries.{SelectOptionalQueries, SelectQueries}
-import org.dbpedia.walloffame.utils.Util
-import org.dbpedia.walloffame.validation.WebIdValidator
-
-import javax.validation.constraints.{Min, Pattern}
-import java.net.URL
 import scala.beans.BeanProperty
-import scala.collection.mutable.ListBuffer
 
 class WebId {
 

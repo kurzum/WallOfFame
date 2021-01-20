@@ -13,7 +13,15 @@ for (i = 0; i < coll.length; i++) {
     });
 }
 
-
+function validateURL() {
+    var a = document.getElementById('webidURL').value;
+    if (a.toString().includes("https://")) {
+        return true;
+    } else {
+        document.getElementById('url_ok').style.display = "block"
+        return false;
+    }
+}
 // window.addEventListener("load", function(){
 //     // Dummy Array
 //     var data2 = $("#result").val();

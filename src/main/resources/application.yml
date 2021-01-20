@@ -8,3 +8,5 @@ virtuoso:
   graph: "http://webids/"
 exhibit:
   file: "./tmp/webids.js"
+databus:
+  file: "./databus/uniformedWebIds/"

@@ -15139,8 +15139,7 @@
                                                 dir = simple !== forward ? "nextSibling" : "previousSibling",
                                                 parent = elem.parentNode,
                                                 name = ofType && elem.nodeName.toLowerCase(),
-                                                // useCache = !xml && !ofType,
-                                                useCache = false,
+                                                useCache = !xml && !ofType,
                                                 diff = false;
 
                                             if (parent) {
@@ -15225,17 +15224,17 @@
                                                                 node.nodeType === 1) &&
                                                                 ++diff) {
 
-                                                                // // Cache the index of each encountered element
-                                                                // if ( useCache ) {
-                                                                //     outerCache = node[ expando ] || (node[ expando ] = {});
-                                                                //
-                                                                //     // Support: IE <9 only
-                                                                //     // Defend against cloned attroperties (jQuery gh-1709)
-                                                                //     uniqueCache = outerCache[ node.uniqueID ] ||
-                                                                //         (outerCache[ node.uniqueID ] = {});
-                                                                //
-                                                                //     uniqueCache[ type ] = [ dirruns, diff ];
-                                                                // }
+                                                                // Cache the index of each encountered element
+                                                                if (useCache) {
+                                                                    outerCache = node[expando] || (node[expando] = {});
+
+                                                                    // Support: IE <9 only
+                                                                    // Defend against cloned attroperties (jQuery gh-1709)
+                                                                    uniqueCache = outerCache[node.uniqueID] ||
+                                                                        (outerCache[node.uniqueID] = {});
+
+                                                                    uniqueCache[type] = [dirruns, diff];
+                                                                }
 
                                                                 if (node === elem) {
                                                                     break;
@@ -15973,7 +15972,7 @@
 
                                 // Cache the compiled function
                                 cached = compilerCache(selector, matcherFromGroupMatchers(elementMatchers, setMatchers));
-                                // cached = createCache()
+
                                 // Save selector and tokenization
                                 cached.selector = selector;
                             }

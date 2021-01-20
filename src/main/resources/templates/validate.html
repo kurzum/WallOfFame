@@ -28,7 +28,6 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
-
                 <li class="nav-item">
                     <a class="nav-link" href="/walloffame">Wall of Fame</a>
                 </li>
@@ -36,7 +35,14 @@
                     <a class="nav-link" href="/validate">WebId Validator</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="http://localhost:8895/sparql/">Sparql Endpoint</a>
+                    <a class="nav-link"
+                       href="https://github.com/Eisenbahnplatte/WallOfFame/blob/master/src/main/resources/shacl/shapes.ttl">Shacl
+                        File</a>
+                </li>
+                <li class="nav-item">
+                    <script language="JavaScript">
+                        document.write('<a class="nav-link" href="' + window.location.protocol + '//' + window.location.hostname + ':8895/sparql/' + '" >Sparql Endpoint</a> ');
+                    </script>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/about">About</a>
@@ -49,21 +55,20 @@
 
 <br>
 
-<div class="container-fluid" style="padding: 100px; padding-top: 0px">
+<div class="container-fluid" style="padding: 0 100px 100px;">
     <div class="row">
         <div class="col-sm">
             You can paste the URL to your WebId here.
             <br/>
             <form method="post" name="URLForm" th:action="@{/fetchAndValidate}" th:object="${webid}"
-                  onsubmit="return validateForm()">
+                  onsubmit="return validateURL()">
                 <input class="form-control" type="text" th:field="*{url}" id="webidURL" name="webidURL">
-                <!--                <textarea class="form-control" name="webIdURL" id="webidURL" th:field="*{url}"></textarea>-->
+                <!-- <textarea class="form-control" name="webIdURL" id="webidURL" th:field="*{url}"></textarea>-->
                 <div id="url_ok" class="alert alert-danger" style="display: none">
                     URL should contain HTTPS
                 </div>
                 <br>
-                <input class="btn btn-primary" type="submit" value="Fetch and Validate">
-                <!--                <button class="btn btn-primary" type="submit">Fetch and Validate</button>-->
+                <button class="btn btn-primary" type="submit">Fetch and Validate</button>
             </form>
 
         </div>
@@ -76,7 +81,7 @@
             You can paste your plain WebId here.
             <br/>
             <form method="post" th:action="@{/validate}" th:object="${webid}">
-                <textarea class="form-control" id="webid" th:field="*{turtle}"></textarea>
+                <textarea class="form-control" id="webid" th:field="*{turtle}" style="height: 20px"></textarea>
                 <br>
                 <button class="btn btn-primary" type="submit">Validate</button>
             </form>
@@ -180,43 +185,6 @@
 
 </div>
 
-<script th:inline="javascript">
-    /*<![CDATA[*/
-    var violations = /*[[${result.getViolations()}]]*/ 'default';
-    var warnings = /*[[${result.getInfos()}]]*/ 'default';
-    var elements = document.getElementsByClassName('collapsible');
-
-    if (violations.length !== 0) {
-        for (var i in elements) {
-            if (elements.hasOwnProperty(i)) {
-                elements[i].className += ' violations';
-            }
-        }
-    } else {
-        if (warnings.length !== 0) {
-            for (var k in elements) {
-                if (elements.hasOwnProperty(k)) {
-                    elements[k].className += ' warnings';
-                }
-            }
-        }
-    }
-    /*]]>*/
-</script>
-
-
-<script type="text/javascript">
-    function validateForm() {
-        var a = document.getElementById('webidURL').value;
-        if (a.toString().includes("https://")) {
-            return true;
-        } else {
-            document.getElementById('url_ok').style.display = "block"
-            return false;
-        }
-    }
-</script>
-
 <script th:src="@{js/validate.js}"></script>
 
 <!--Yate Turtle Syntax Highlighting-->
@@ -225,6 +193,33 @@
     // var yate = YATE(document.getElementById("showcase"));
     var yate = YATE.fromTextArea(document.getElementById('webid'));
 </script>
+<!--Yate Turtle Syntax Highlighting-->
+
+
+<!--<script th:inline="javascript">-->
+<!--    /*<![CDATA[*/-->
+<!--    var violations = /*[[${result.getViolations()}]]*/ 'default';-->
+<!--    var warnings = /*[[${result.getInfos()}]]*/ 'default';-->
+<!--    var elements = document.getElementsByClassName('collapsible');-->
+
+<!--    if (violations.length !== 0) {-->
+<!--        for (var i in elements) {-->
+<!--            if (elements.hasOwnProperty(i)) {-->
+<!--                elements[i].className += ' violations';-->
+<!--            }-->
+<!--        }-->
+<!--    } else {-->
+<!--        if (warnings.length !== 0) {-->
+<!--            for (var k in elements) {-->
+<!--                if (elements.hasOwnProperty(k)) {-->
+<!--                    elements[k].className += ' warnings';-->
+<!--                }-->
+<!--            }-->
+<!--        }-->
+<!--    }-->
+<!--    /*]]>*/-->
+<!--</script>-->
+
 
 </body>
 

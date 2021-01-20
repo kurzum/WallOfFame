@@ -3,8 +3,8 @@ package org.dbpedia.walloffame.spring.controller
 import better.files.File
 import org.apache.commons.io.IOUtils
 import org.apache.jena.atlas.web.HttpException
-import org.apache.jena.rdf.model.{ModelFactory, RDFWriter}
-import org.apache.jena.riot.{Lang, RDFDataMgr, RiotException}
+import org.apache.jena.rdf.model.{Model, ModelFactory, RDFWriter}
+import org.apache.jena.riot.{Lang, RDFDataMgr, RiotException, RiotNotFoundException}
 import org.dbpedia.walloffame.Config
 import org.dbpedia.walloffame.convert.ModelToJSONConverter
 import org.dbpedia.walloffame.spring.model.{Result, WebId}
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.{GetMapping, ModelAttribute, Post
 import org.springframework.web.servlet.ModelAndView
 
 import java.io
-import java.io.{BufferedInputStream, ByteArrayOutputStream, FileInputStream, IOException}
+import java.io.{ByteArrayOutputStream, FileInputStream, IOException}
 import java.net.{MalformedURLException, SocketTimeoutException, URL, UnknownHostException}
 import javax.servlet.http.HttpServletResponse
 import javax.validation.Valid
@@ -29,7 +29,7 @@ class ValidationController(config: Config) {
   //value = Array("url") is the url the resulting site will be located at
   //viewname is the path to the related jsp file
   @GetMapping(value = Array("/", "/validate"))
-  def getValidate(modelAndView: ModelAndView): ModelAndView = {
+  def getValidate(): ModelAndView = {
 
     val str =
       """
@@ -58,18 +58,15 @@ class ValidationController(config: Config) {
         |     ] .
         |""".stripMargin
 
-    val model = RDFDataMgr.loadModel(
-      WebIdValidator.writeFile(str).pathAsString
-    )
+    val model: Model = ModelFactory.createDefaultModel().read(IOUtils.toInputStream(str, "UTF-8"), "", "TURTLE")
 
-    val webid = new WebId(model)
-    webid.setTurtle(str)
-    webid.setUrl("https://raw.githubusercontent.com/Eisenbahnplatte/eisenbahnplatte.github.io/master/webid.ttl")
-    modelAndView.addObject("webid", webid)
+    val webId = new WebId(model)
+    webId.setTurtle(str)
+    webId.setUrl("https://raw.githubusercontent.com/Eisenbahnplatte/eisenbahnplatte.github.io/master/webid.ttl")
+
+    val modelAndView = new ModelAndView("validate")
+    modelAndView.addObject("webid", webId)
     modelAndView.addObject("result", new Result)
-    modelAndView.addObject("shortResult", "")
-    modelAndView.setViewName("validate")
-    modelAndView
   }
 
   @PostMapping(value = Array("/", "validate"))
@@ -80,24 +77,14 @@ class ValidationController(config: Config) {
   def handlePostedWebId(webId: WebId): ModelAndView = {
 
     val modelAndView = new ModelAndView("validate")
-    val fileToValidate = WebIdValidator.writeFile(webId.turtle)
-
-    //    if (webId.url != null) {
-    //      val model= ModelFactory.createDefaultModel()
-    //      model.read(new FileInputStream(fileToValidate.pathAsString), webId.url)
-    //      val out = new ByteArrayOutputStream()
-    //      RDFDataMgr.write(out, model, Lang.TURTLE)
-    //      webId.setTurtle(out.toString)
-    //    }
-
+    val model: Model = ModelFactory.createDefaultModel().read(IOUtils.toInputStream(webId.turtle, "UTF-8"), "", "TURTLE")
 
     try {
-      val result = WebIdValidator.validate(fileToValidate)
+      val result = WebIdValidator.validate(model)
 
-      if (result.conforms) {
+      if (result.conforms()) {
         //valid webid
-        val model = WebIdUniformer.uniform(fileToValidate)
-        val newWebId = new WebId(model)
+        val newWebId = new WebId(WebIdUniformer.uniform(model))
         newWebId.setTurtle(webId.turtle)
         newWebId.setUrl(webId.url)
         modelAndView.addObject("webid", newWebId)
@@ -124,28 +111,25 @@ class ValidationController(config: Config) {
   @PostMapping(value = Array("/fetchAndValidate"))
   def fetchAndValidate(@ModelAttribute("webid") webId: WebId): ModelAndView = {
 
-    //    println("peace")
-    //    if(bindingResult.hasErrors()){
-    //      println("hallohallo")
-    //      return new ModelAndView("validate")
-    //    }
-
     try {
       val model = RDFDataMgr.loadModel(webId.url.trim)
 
       val newWebId = new WebId(model)
       newWebId.setUrl(webId.url)
+
       val out = new ByteArrayOutputStream()
       RDFDataMgr.write(out, model, Lang.TURTLE)
       newWebId.setTurtle(out.toString)
 
       handlePostedWebId(newWebId)
+
     } catch {
       case unknownHostException: UnknownHostException => handleException(new ModelAndView("validate"), webId, unknownHostException.toString)
       case malformedURLException: MalformedURLException => handleException(new ModelAndView("validate"), webId, malformedURLException.toString)
       case ioexception: IOException => handleException(new ModelAndView("validate"), webId, ioexception.toString)
       case httpException: HttpException => handleException(new ModelAndView("validate"), webId, httpException.toString)
       case socketTimeoutException: SocketTimeoutException => handleException(new ModelAndView("validate"), webId, socketTimeoutException.toString)
+      case riotNotFoundException: RiotNotFoundException => handleException(new ModelAndView("validate"), webId, riotNotFoundException.toString)
     }
 
     //      val turtle = Util.get(new URL(webId.url.trim))

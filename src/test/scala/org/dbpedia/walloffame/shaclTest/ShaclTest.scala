@@ -17,17 +17,17 @@ class ShaclTest {
   val shapeFile = File("./src/main/resources/shacl/shapes.ttl")
   val testResourceDir = File("./src/test/resources/")
 
-  @Test
-  def shouldPrintOutCorrectOutput {
-    val webIdFile = testResourceDir / "wrongWebId.ttl"
-    println(WebIdValidator.validate(webIdFile, shapeFile))
-  }
-
-  @Test
-  def shouldSuccess {
-    val webIdFile = testResourceDir / "correctWebId.ttl"
-    println(WebIdValidator.validate(webIdFile))
-  }
+  //  @Test
+  //  def shouldPrintOutCorrectOutput {
+  //    val webIdFile = testResourceDir / "wrongWebId.ttl"
+  //    println(WebIdValidator.validate(webIdFile, shapeFile))
+  //  }
+  //
+  //  @Test
+  //  def shouldSuccess {
+  //    val webIdFile = testResourceDir / "correctWebId.ttl"
+  //    println(WebIdValidator.validate(webIdFile))
+  //  }
 
   @Test
   def shaclShouldSuccess: Unit = {
@@ -76,28 +76,30 @@ class ShaclTest {
     assert(!validate(webIdFile, shapeFile))
   }
 
-  @Test
-  def correctFileShouldPass: Unit = {
+  //
+  //  @Test
+  //  def correctFileShouldPass: Unit = {
+  //
+  //    val webIdFile = testResourceDir / "correctWebId.ttl"
+  //    println(WebIdValidator.validate(webIdFile, shapeFile))
+  //  }
+  //
+  //  @Test
+  //  def wrongFileShouldNotPass: Unit = {
+  //    val webIdFile = testResourceDir / "wrongWebId.ttl"
+  //    println(WebIdValidator.validate(webIdFile, shapeFile))
+  //  }
 
-    val webIdFile = testResourceDir / "correctWebId.ttl"
-    println(WebIdValidator.validate(webIdFile, shapeFile))
-  }
-
   @Test
-  def wrongFileShouldNotPass: Unit = {
-    val webIdFile = testResourceDir / "wrongWebId.ttl"
-    println(WebIdValidator.validate(webIdFile, shapeFile))
-  }
-
-  @Test
-  def stringShould:Unit ={
-    val str = """
-                |@prefix sh:    <http://www.w3.org/ns/shacl#> .
-                |@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-                |@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
-                |@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
-                |@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
-                |@prefix shsh:  <http://www.w3.org/ns/shacl-shacl#> .
+  def stringShould: Unit = {
+    val str =
+      """
+        |@prefix sh:    <http://www.w3.org/ns/shacl#> .
+        |@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+        |@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+        |@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+        |@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+        |@prefix shsh:  <http://www.w3.org/ns/shacl-shacl#> .
                 |
                 |[ a            sh:ValidationReport ;
                 |  sh:conforms  false ;

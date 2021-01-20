@@ -35,9 +35,4 @@ class WoFController {
     "result"
   }
 
-  @RequestMapping(value = Array("/yate"), method = Array(RequestMethod.GET))
-  def getYate(): String = {
-    "yate"
-  }
-
 }

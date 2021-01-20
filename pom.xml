@@ -20,6 +20,7 @@
         <java.version>1.8</java.version>
         <scala.version>2.11.12</scala.version>
         <jena.version>3.14.0</jena.version>
+        <main-class>org.dbpedia.walloffame.Application</main-class>
     </properties>
 
     <dependencies>
@@ -144,6 +145,14 @@
                         </exclude>
                     </excludes>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>default</id>
+                        <configuration>
+                            <mainClass>${main-class}</mainClass>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>net.alchim31.maven</groupId>
@@ -185,6 +194,12 @@
                         <jvmArg>-Xms64m</jvmArg>
                         <jvmArg>-Xmx1024m</jvmArg>
                     </jvmArgs>
+                    <launchers>
+                        <launcher>
+                            <id>databus-application</id>
+                            <mainClass>org.dbpedia.walloffame.DatabusApplication</mainClass>
+                        </launcher>
+                    </launchers>
                 </configuration>
             </plugin>
         </plugins>

@@ -1,9 +1,10 @@
 package org.dbpedia.walloffame.validation
 
 import better.files.File
-import org.apache.jena.rdf.model.ModelFactory
+import org.apache.jena.rdf.model.{ModelFactory, Model}
 import org.apache.jena.riot.{Lang, RDFDataMgr}
 import org.apache.jena.shacl.{ShaclValidator, Shapes}
+import org.apache.jena.sparql.graph.GraphFactory
 import org.dbpedia.walloffame.spring.model.Result
 import org.dbpedia.walloffame.uniform.QueryHandler
 import org.dbpedia.walloffame.uniform.queries.SelectQueries
@@ -26,7 +27,7 @@ object WebIdValidator {
   }
 
 
-  def validate(webIdFile: File): Result = {
+  def validate(webId: Model): Result = {
 
     import org.springframework.core.io.support.PathMatchingResourcePatternResolver
     val resolver = new PathMatchingResourcePatternResolver
@@ -48,7 +49,7 @@ object WebIdValidator {
         out.close
       }
 
-      val partResult = validate(webIdFile, tmpShapeFile)
+      val partResult = validate(webId, RDFDataMgr.loadModel(tmpShapeFile.pathAsString))
 
       tmpShapeFile.delete()
       result = partResult
@@ -57,9 +58,9 @@ object WebIdValidator {
     result
   }
 
-  def validate(webIdFile: File, shapesFile: File): Result = {
-    val shapesGraph = RDFDataMgr.loadGraph(shapesFile.pathAsString)
-    val dataGraph = RDFDataMgr.loadGraph(webIdFile.pathAsString)
+  def validate(webId: Model, shapesModel: Model): Result = {
+    val shapesGraph = shapesModel.getGraph
+    val dataGraph = webId.getGraph
     val shapes = Shapes.parse(shapesGraph)
 
     val report = ShaclValidator.get.validate(shapes, dataGraph)
